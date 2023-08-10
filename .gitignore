@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+yarn.lock
+package-lock.json
 
 # testing
 /coverage
@@ -11,13 +13,22 @@
 # production
 /build
 
+# Editor and IDE files
+.vscode/
+.idea/
+*.iml
+
 # misc
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+Thumbs.db
 
+# Output of the npm package manager
 npm-debug.log*
+
+# Output of the yarn package manager
 yarn-debug.log*
-yarn-error.log*
+yarn-error.log
