@@ -10,6 +10,7 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme, Typography, Button } from "antd";
 import { MainDashboardContentView } from "./MainDashboardContentView";
+import { Link } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -33,10 +34,18 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Employees", "sub1", <TeamOutlined />, [
-    getItem("Manage Employees", "1", <EditOutlined />),
+    getItem(
+      <Link to="/dashboard/manage-employees">Manage Employees</Link>,
+      "1",
+      <EditOutlined />
+    ),
   ]),
   getItem("Skills", "sub2", <BookOutlined />, [
-    getItem("Manage Skills", "2", <EditOutlined />),
+    getItem(
+      <Link to="/dashboard/manage-skills">Manage Employees</Link>,
+      "2",
+      <EditOutlined />
+    ),
   ]),
   getItem("Logout", "3", <LogoutOutlined />),
 ];
