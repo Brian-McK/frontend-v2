@@ -1,12 +1,26 @@
 import React from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
+import {
+  loginUser,
+  AuthenticationResponse,
+  AuthenticationRequest,
+} from "../../services/authservice";
 
 export const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: any) => {
-    console.log("Received values of form: ", values);
+  const onFinish = async (values: any) => {
+    try {
+      const credentials: AuthenticationRequest = {
+        username: values.username,
+        password: values.password,
+      };
+      const response: AuthenticationResponse = await loginUser(credentials);
+      console.log("User authenticated:", response.authenticated.username);
+    } catch (error) {
+      console.error("Authentication failed:", error);
+    }
   };
 
   return (
