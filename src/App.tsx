@@ -6,11 +6,15 @@ import { ManageEmployees } from "./components/employees/ManageEmployees";
 import { ManageSkills } from "./components/skills/ManageSkills";
 
 const App: React.FC = () => (
-  <Routes>
-    <Route path="/" element={<Login />} />
-    <Route path="login" element={<Login />} />
-    <Route path="/dashboard/*" element={<DashboardRoutes />} />
-  </Routes>
+  <>
+    <div style={{ height: "100vh", width: "100vw", border: "2px solid red" }}>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="login" element={<Login />} />
+        <Route path="dashboard/*" element={<DashboardRoutes />} />
+      </Routes>
+    </div>
+  </>
 );
 
 function DashboardRoutes() {
