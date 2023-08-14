@@ -1,3 +1,9 @@
+import { SkillsTable } from "./SkillsTable";
+
 export const ManageSkills: React.FC = () => {
-  return <>Manage Skills</>;
+  return (
+    <>
+      <SkillsTable />
+    </>
+  );
 };
