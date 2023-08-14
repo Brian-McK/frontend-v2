@@ -28,8 +28,6 @@ export const LoginForm: React.FC = () => {
         password: values.password,
       };
 
-      console.log(credentials);
-
       const response: AuthenticationResponse = await loginUser(credentials);
 
       if (response.authenticated) {

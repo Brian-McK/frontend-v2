@@ -2,12 +2,15 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const BASE_URL = "http://localhost:3000/";
 
+let token = localStorage.getItem("token");
+
 const instance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
   },
 });
 
@@ -31,7 +34,7 @@ export const get = async <T,>(url: string, params?: any): Promise<T> => {
 
 export const post = async <T,>(
   url: string,
-  data: any
+  data?: any
 ): Promise<ApiResponse<T>> => {
   try {
     const response: ApiResponse<T> = await instance.post(url, data);

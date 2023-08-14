@@ -32,13 +32,17 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
 
   // Check if the user is logged in from previous sessions (e.g., using local storage)
   useEffect(() => {
-    console.log("called");
     const storedUser = localStorage.getItem("username");
     const storedToken = localStorage.getItem("token");
     if (storedUser && storedToken) {
       setUser(storedUser);
       setToken(storedToken);
     }
+
+    console.log({
+      user: user,
+      token: token,
+    });
   }, []);
 
   const setLoggedIn = (user: string, token: string) => {

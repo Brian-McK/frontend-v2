@@ -12,6 +12,7 @@ import { Breadcrumb, Layout, Menu, theme, Typography, Button } from "antd";
 import { MainDashboardContentView } from "./MainDashboardContentView";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { logoutUser } from "../../services/authservice";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -43,9 +44,17 @@ export const Dashboard: React.FC = () => {
 
   const auth = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("called");
-    auth.setLoggedOut();
+    try {
+      const response = await logoutUser();
+
+      if (response) {
+        auth.setLoggedOut();
+      }
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const items: MenuItem[] = [

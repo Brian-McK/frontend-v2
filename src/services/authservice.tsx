@@ -1,4 +1,4 @@
-import { post } from "./api";
+import { ApiResponse, post } from "./api";
 
 interface AuthenticatedUser {
   username: string;
@@ -24,6 +24,17 @@ export async function loginUser(
       "/auth/login",
       credentials
     );
+
+    return authResponse.data;
+  } catch (error) {
+    console.error("Error authenticating user: ", error);
+    throw error;
+  }
+}
+
+export async function logoutUser() {
+  try {
+    const authResponse = await post("/auth/logout");
 
     return authResponse.data;
   } catch (error) {
