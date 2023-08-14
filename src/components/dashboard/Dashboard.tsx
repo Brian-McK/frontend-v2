@@ -11,6 +11,7 @@ import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme, Typography, Button } from "antd";
 import { MainDashboardContentView } from "./MainDashboardContentView";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -22,39 +23,48 @@ function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
-  children?: MenuItem[]
+  children?: MenuItem[],
+  onClick?: () => void
 ): MenuItem {
   return {
     key,
     icon,
     children,
     label,
+    onClick,
   } as MenuItem;
 }
-
-const items: MenuItem[] = [
-  getItem("Employees", "sub1", <TeamOutlined />, [
-    getItem(
-      <Link to="/dashboard/manage-employees">Manage Employees</Link>,
-      "1",
-      <EditOutlined />
-    ),
-  ]),
-  getItem("Skills", "sub2", <BookOutlined />, [
-    getItem(
-      <Link to="/dashboard/manage-skills">Manage Employees</Link>,
-      "2",
-      <EditOutlined />
-    ),
-  ]),
-  getItem("Logout", "3", <LogoutOutlined />),
-];
 
 export const Dashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const auth = useAuth();
+
+  const handleLogout = () => {
+    console.log("called");
+    auth.setLoggedOut();
+  };
+
+  const items: MenuItem[] = [
+    getItem("Employees", "sub1", <TeamOutlined />, [
+      getItem(
+        <Link to="/dashboard/manage-employees">Manage Employees</Link>,
+        "1",
+        <EditOutlined />
+      ),
+    ]),
+    getItem("Skills", "sub2", <BookOutlined />, [
+      getItem(
+        <Link to="/dashboard/manage-skills">Manage Employees</Link>,
+        "2",
+        <EditOutlined />
+      ),
+    ]),
+    getItem("Logout", "3", <LogoutOutlined />, undefined, handleLogout),
+  ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -88,7 +98,7 @@ export const Dashboard: React.FC = () => {
             }}
           />
           <Title style={{ margin: "0 16px" }} level={3}>
-            Welcome Name
+            Welcome {auth.user}
           </Title>
         </Header>
         <Content style={{ margin: "0 16px" }}>

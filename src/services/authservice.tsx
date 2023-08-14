@@ -24,7 +24,8 @@ export async function loginUser(
       "/auth/login",
       credentials
     );
-    return authResponse;
+
+    return authResponse.data;
   } catch (error) {
     console.error("Error authenticating user: ", error);
     throw error;

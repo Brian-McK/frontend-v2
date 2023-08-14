@@ -11,6 +11,11 @@ const instance: AxiosInstance = axios.create({
   },
 });
 
+export interface ApiResponse<T> {
+  data: T;
+  status: number;
+}
+
 // Define API request functions
 export const get = async <T,>(url: string, params?: any): Promise<T> => {
   try {
@@ -24,10 +29,14 @@ export const get = async <T,>(url: string, params?: any): Promise<T> => {
   }
 };
 
-export const post = async <T,>(url: string, data: any): Promise<T> => {
+export const post = async <T,>(
+  url: string,
+  data: any
+): Promise<ApiResponse<T>> => {
   try {
-    const response: AxiosResponse<T> = await instance.post(url, data);
-    return response.data;
+    const response: ApiResponse<T> = await instance.post(url, data);
+
+    return response;
   } catch (error) {
     handleApiError(error);
     throw error;

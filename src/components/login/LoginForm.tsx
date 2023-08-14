@@ -6,6 +6,7 @@ import {
   AuthenticationResponse,
   AuthenticationRequest,
 } from "../../services/authservice";
+import { useAuth } from "../../context/AuthContext";
 
 type ErrorWithResponseDataMessage = {
   response: {
@@ -18,6 +19,8 @@ type ErrorWithResponseDataMessage = {
 export const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
 
+  const auth = useAuth();
+
   const onFinish = async (values: AuthenticationRequest) => {
     try {
       const credentials: AuthenticationRequest = {
@@ -28,8 +31,17 @@ export const LoginForm: React.FC = () => {
       console.log(credentials);
 
       const response: AuthenticationResponse = await loginUser(credentials);
-      console.log("User authenticated:", response);
+
+      if (response.authenticated) {
+        auth.setLoggedIn(
+          response.authenticated.username,
+          response.authenticated.jwtToken
+        );
+        console.log("User authenticated:", response);
+      }
     } catch (error) {
+      auth.setLoggedOut();
+
       console.error(
         "Authentication failed:",
         (error as ErrorWithResponseDataMessage).response.data.message
