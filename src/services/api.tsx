@@ -1,15 +1,11 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const BASE_URL = "http://localhost:3000/";
-interface ApiResponse<T> {
-  data: T;
-  status: number;
-  message?: string;
-}
 
 const instance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -18,10 +14,10 @@ const instance: AxiosInstance = axios.create({
 // Define API request functions
 export const get = async <T,>(url: string, params?: any): Promise<T> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await instance.get(url, {
+    const response: AxiosResponse<T> = await instance.get(url, {
       params,
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;
@@ -30,11 +26,8 @@ export const get = async <T,>(url: string, params?: any): Promise<T> => {
 
 export const post = async <T,>(url: string, data: any): Promise<T> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await instance.post(
-      url,
-      data
-    );
-    return response.data.data;
+    const response: AxiosResponse<T> = await instance.post(url, data);
+    return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;
@@ -43,11 +36,8 @@ export const post = async <T,>(url: string, data: any): Promise<T> => {
 
 export const put = async <T,>(url: string, data: any): Promise<T> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await instance.put(
-      url,
-      data
-    );
-    return response.data.data;
+    const response: AxiosResponse<T> = await instance.put(url, data);
+    return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;
@@ -56,11 +46,8 @@ export const put = async <T,>(url: string, data: any): Promise<T> => {
 
 export const patch = async <T,>(url: string, data: any): Promise<T> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await instance.patch(
-      url,
-      data
-    );
-    return response.data.data;
+    const response: AxiosResponse<T> = await instance.patch(url, data);
+    return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;
@@ -69,8 +56,8 @@ export const patch = async <T,>(url: string, data: any): Promise<T> => {
 
 export const del = async <T,>(url: string): Promise<T> => {
   try {
-    const response: AxiosResponse<ApiResponse<T>> = await instance.delete(url);
-    return response.data.data;
+    const response: AxiosResponse<T> = await instance.delete(url);
+    return response.data;
   } catch (error) {
     handleApiError(error);
     throw error;

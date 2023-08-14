@@ -7,19 +7,33 @@ import {
   AuthenticationRequest,
 } from "../../services/authservice";
 
+type ErrorWithResponseDataMessage = {
+  response: {
+    data: {
+      message: string;
+    };
+  };
+};
+
 export const LoginForm: React.FC = () => {
   const [form] = Form.useForm();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: AuthenticationRequest) => {
     try {
       const credentials: AuthenticationRequest = {
         username: values.username,
         password: values.password,
       };
+
+      console.log(credentials);
+
       const response: AuthenticationResponse = await loginUser(credentials);
-      console.log("User authenticated:", response.authenticated.username);
+      console.log("User authenticated:", response);
     } catch (error) {
-      console.error("Authentication failed:", error);
+      console.error(
+        "Authentication failed:",
+        (error as ErrorWithResponseDataMessage).response.data.message
+      );
     }
   };
 

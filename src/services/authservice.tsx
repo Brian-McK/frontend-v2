@@ -1,4 +1,4 @@
-import api from "./api";
+import { post } from "./api";
 
 interface AuthenticatedUser {
   username: string;
@@ -20,11 +20,11 @@ export async function loginUser(
   credentials: AuthenticationRequest
 ): Promise<AuthenticationResponse> {
   try {
-    const authResponse = await api.post<AuthenticationResponse>(
+    const authResponse = await post<AuthenticationResponse>(
       "/auth/login",
       credentials
     );
-    return authResponse.data;
+    return authResponse;
   } catch (error) {
     console.error("Error authenticating user: ", error);
     throw error;
