@@ -5,52 +5,27 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
+import { ISkill, SkillsArray } from "../../services/skillsservice";
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
+type SkillTableProps = {
+  skills: SkillsArray | null;
+  isLoadingSkills: boolean;
+};
 
-type DataIndex = keyof DataType;
+type SkillDataIndex = ISkill["_id"];
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-  },
-  {
-    key: "2",
-    name: "Joe Black",
-    age: 42,
-    address: "London No. 1 Lake Park",
-  },
-  {
-    key: "3",
-    name: "Jim Green",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-  },
-  {
-    key: "4",
-    name: "Jim Red",
-    age: 32,
-    address: "London No. 2 Lake Park",
-  },
-];
-
-export const SkillsTable: React.FC = () => {
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const searchInput = useRef<InputRef>(null);
+export const SkillsTable: React.FC<SkillTableProps> = ({
+  skills,
+  isLoadingSkills,
+}: SkillTableProps) => {
+  const [searchText, setSearchText] = useState<any | null>(null);
+  const [searchedColumn, setSearchedColumn] = useState<string | null>(null);
+  const searchInput = useRef<InputRef | null>(null);
 
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: DataIndex
+    dataIndex: SkillDataIndex
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -63,8 +38,8 @@ export const SkillsTable: React.FC = () => {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): ColumnType<DataType> => ({
+    dataIndex: SkillDataIndex
+  ): ColumnType<ISkill> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -131,7 +106,7 @@ export const SkillsTable: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
+      (record[dataIndex as keyof ISkill] as string)
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
@@ -153,30 +128,49 @@ export const SkillsTable: React.FC = () => {
       ),
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<ISkill> = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       width: "30%",
       ...getColumnSearchProps("name"),
+      sorter: (a, b) => a.name.localeCompare(b.name),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Age",
-      dataIndex: "age",
-      key: "age",
-      width: "20%",
-      ...getColumnSearchProps("age"),
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      width: "60%",
+      ...getColumnSearchProps("description"),
+      sorter: (a, b) => a.description.localeCompare(b.description),
+      sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-      ...getColumnSearchProps("address"),
-      sorter: (a, b) => a.address.length - b.address.length,
+      title: "Created",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: "10%",
+      sorter: (a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateA.getTime() - dateB.getTime();
+      },
+      render: (createdAt) => new Date(createdAt).toLocaleDateString(),
       sortDirections: ["descend", "ascend"],
     },
   ];
 
-  return <Table columns={columns} dataSource={data} />;
+  if (skills === null) {
+    return <div>Loading or error message...</div>;
+  }
+
+  return (
+    <Table
+      loading={isLoadingSkills}
+      columns={columns}
+      dataSource={skills.map((skill) => ({ ...skill, key: skill._id }))}
+    />
+  );
 };

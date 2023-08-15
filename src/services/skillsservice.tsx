@@ -15,6 +15,8 @@ export async function getAllSkills(): Promise<SkillsArray> {
   try {
     const skillsResponse = await get<SkillsArray>("/skilllevels");
 
+    console.log(skillsResponse);
+
     return skillsResponse;
   } catch (error) {
     console.error("Error fetching skills: ", error);

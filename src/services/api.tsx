@@ -19,6 +19,21 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
+instance.interceptors.response.use(
+  (response) => {
+    if (response.data && Array.isArray(response.data)) {
+      response.data = response.data.map((item) => ({
+        ...item,
+        createdAt: new Date(item.createdAt).toLocaleDateString("en-GB"),
+      }));
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export interface ApiResponse<T> {
   data: T;
   status: number;
