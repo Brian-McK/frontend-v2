@@ -6,6 +6,7 @@ import {
   ISkill,
   getAllSkills,
 } from "../../services/skillsservice";
+import { AddSkillForm } from "./AddSkillForm";
 
 export const ManageSkills: React.FC = () => {
   const [skills, setSkills] = useState<SkillsArray | null>(null);
@@ -18,8 +19,6 @@ export const ManageSkills: React.FC = () => {
     async function fetchSkills() {
       try {
         const skillsResponse = await getAllSkills();
-
-        console.log(skillsResponse);
         setSkills(skillsResponse);
         setLoading(false);
       } catch (error) {
@@ -33,7 +32,9 @@ export const ManageSkills: React.FC = () => {
     <>
       <Row gutter={16}>
         <Col sm={24} lg={8}>
-          <Card title={"Add a skill"} loading={loading}></Card>
+          <Card title={"Add a skill"} loading={loading}>
+            <AddSkillForm />
+          </Card>
         </Col>
         <Col sm={24} lg={16}>
           <Card title={"Skill levels"} loading={loading}>

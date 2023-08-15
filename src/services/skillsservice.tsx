@@ -11,7 +11,7 @@ export interface SkillsArray extends Array<ISkill> {
   status: number;
 }
 
-export type AddNewSkillRequest = {
+export type AddNewSkillRequestType = {
   name: string;
   description: string;
 };
@@ -30,7 +30,7 @@ export async function getAllSkills(): Promise<SkillsArray> {
 }
 
 export async function addNewSkill(
-  newSkill: AddNewSkillRequest
+  newSkill: AddNewSkillRequestType
 ): Promise<ISkill> {
   try {
     const addNewSkillResponse = await post<ISkill>("/skilllevels", newSkill);
