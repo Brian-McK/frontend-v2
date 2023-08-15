@@ -33,10 +33,10 @@ export const ManageSkills: React.FC = () => {
     <>
       <Row gutter={16}>
         <Col sm={24} lg={8}>
-          <Card loading={loading}></Card>
+          <Card title={"Add a skill"} loading={loading}></Card>
         </Col>
         <Col sm={24} lg={16}>
-          <Card loading={loading}>
+          <Card title={"Skill levels"} loading={loading}>
             <SkillsTable isLoadingSkills={loading} skills={skills} />
           </Card>
         </Col>
