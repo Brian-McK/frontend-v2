@@ -7,7 +7,7 @@ import { ManageSkills } from "./components/skills/ManageSkills";
 
 const App: React.FC = () => (
   <>
-    <div style={{ height: "100vh", width: "100vw", border: "2px solid red" }}>
+    <div>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="login" element={<Login />} />
