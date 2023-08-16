@@ -5,10 +5,10 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import { ISkill, SkillsArray } from "../../services/skillsservice";
+import { ISkill, ISkillsArray } from "../../services/skillsservice";
 
 type SkillTableProps = {
-  skills: SkillsArray | null;
+  skills: ISkillsArray | null;
   isLoadingSkills: boolean;
 };
 

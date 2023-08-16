@@ -1,4 +1,4 @@
-import { ApiResponse, get, post } from "./api";
+import { IApiResponse, get, post } from "./api";
 
 export interface ISkill {
   _id: string;
@@ -7,18 +7,16 @@ export interface ISkill {
   createdAt: Date;
 }
 
-export interface SkillsArray extends Array<ISkill> {
-  status: number;
-}
+export interface ISkillsArray extends Array<ISkill> {}
 
 export type AddNewSkillRequestType = {
   name: string;
   description: string;
 };
 
-export async function getAllSkills<T>(): Promise<ApiResponse<T>> {
+export async function getAllSkills<T>(): Promise<IApiResponse<T>> {
   try {
-    const skillsResponse: ApiResponse<T> = await get("/skilllevels");
+    const skillsResponse: IApiResponse<T> = await get("/skilllevels");
     return skillsResponse;
   } catch (error) {
     console.error("Error fetching skills: ", error);
@@ -28,9 +26,9 @@ export async function getAllSkills<T>(): Promise<ApiResponse<T>> {
 
 export async function addNewSkill<T>(
   newSkill: AddNewSkillRequestType
-): Promise<ApiResponse<T>> {
+): Promise<IApiResponse<T>> {
   try {
-    const addNewSkillResponse: ApiResponse<T> = await post(
+    const addNewSkillResponse: IApiResponse<T> = await post(
       "/skilllevels",
       newSkill
     );

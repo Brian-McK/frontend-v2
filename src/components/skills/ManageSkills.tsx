@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { SkillsTable } from "./SkillsTable";
 import { Col, Row, Card } from "antd";
-import { SkillsArray, getAllSkills } from "../../services/skillsservice";
+import { ISkillsArray, getAllSkills } from "../../services/skillsservice";
 import { AddSkillForm } from "./AddSkillForm";
 
 type GetSkillsResponseType = {
-  data: SkillsArray;
+  data: ISkillsArray;
   status: number;
 };
 
 export const ManageSkills: React.FC = () => {
-  const [skills, setSkills] = useState<SkillsArray | null>(null);
+  const [skills, setSkills] = useState<ISkillsArray | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

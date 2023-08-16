@@ -34,7 +34,7 @@ instance.interceptors.response.use(
   }
 );
 
-export interface ApiResponse<T> {
+export interface IApiResponse<T> {
   data: T;
   status: number;
 }
@@ -43,9 +43,9 @@ export interface ApiResponse<T> {
 export const get = async <T,>(
   url: string,
   params?: any
-): Promise<ApiResponse<T>> => {
+): Promise<IApiResponse<T>> => {
   try {
-    const response: ApiResponse<T> = await instance.get(url, {
+    const response: IApiResponse<T> = await instance.get(url, {
       params,
     });
     return {
@@ -61,9 +61,9 @@ export const get = async <T,>(
 export const post = async <T,>(
   url: string,
   data?: any
-): Promise<ApiResponse<T>> => {
+): Promise<IApiResponse<T>> => {
   try {
-    const response: ApiResponse<T> = await instance.post(url, data);
+    const response: IApiResponse<T> = await instance.post(url, data);
     return {
       data: response.data,
       status: response.status,

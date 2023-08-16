@@ -4,10 +4,8 @@ import { Button, Form, Input } from "antd";
 import {
   addNewSkill,
   AddNewSkillRequestType,
-  ISkill,
 } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
-import { ApiResponse } from "../../services/api";
 
 type ErrorWithResponseDataMessage = {
   response: {

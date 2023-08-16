@@ -1,26 +1,26 @@
-import { ApiResponse, post } from "./api";
+import { IApiResponse, post } from "./api";
 
-interface AuthenticatedUser {
+interface IAuthenticatedUser {
   username: string;
   jwtToken: string;
   refreshToken: string;
 }
 
-export interface AuthenticationResponse {
+export interface IAuthenticationResponse {
   message: string;
-  authenticated: AuthenticatedUser;
+  authenticated: IAuthenticatedUser;
 }
 
-export type AuthenticationRequest = {
+export type IAuthenticationRequest = {
   username: string;
   password: string;
 };
 
 export async function loginUser(
-  credentials: AuthenticationRequest
-): Promise<AuthenticationResponse> {
+  credentials: IAuthenticationRequest
+): Promise<IAuthenticationResponse> {
   try {
-    const authResponse = await post<AuthenticationResponse>(
+    const authResponse = await post<IAuthenticationResponse>(
       "/auth/login",
       credentials
     );
