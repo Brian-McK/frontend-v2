@@ -15,7 +15,15 @@ type ErrorWithResponseDataMessage = {
   };
 };
 
-export const AddSkillForm: React.FC = () => {
+interface AddSkillFormProps {
+  onMutationResolved: (data: boolean) => void;
+}
+
+const { TextArea } = Input;
+
+export const AddSkillForm: React.FC<AddSkillFormProps> = ({
+  onMutationResolved,
+}: AddSkillFormProps) => {
   const [form] = Form.useForm();
 
   const auth = useAuth();
@@ -27,22 +35,16 @@ export const AddSkillForm: React.FC = () => {
         description: values.description,
       };
 
-      console.log(newSkill);
-
       const addSkillResponse = await addNewSkill(newSkill);
 
-      console.log(addSkillResponse);
-
-      // FIX THE DATE - FIX THE RESPONSE STATUS - FETCH FOR SKILLS AGAIN
+      // FIX THE DATE
 
       if (addSkillResponse.status === 201) {
-        // fetch again for skills
-        console.log(addSkillResponse);
+        // trigger for refetching skills
+        onMutationResolved(true);
       }
-
-      // return 201 created, need to change the type, also add loading state
     } catch (error) {
-      console.error(error);
+      console.error(error); // TODO- ERROR STATE
     }
   };
 
@@ -58,19 +60,13 @@ export const AddSkillForm: React.FC = () => {
         name="name"
         rules={[{ required: true, message: "Please input name" }]}
       >
-        <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="name"
-        />
+        <Input placeholder="name" />
       </Form.Item>
       <Form.Item
         name="description"
         rules={[{ required: true, message: "Please input description" }]}
       >
-        <Input
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="description"
-        />
+        <TextArea rows={3} placeholder="description" />
       </Form.Item>
 
       <Form.Item>
