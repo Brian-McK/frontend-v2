@@ -8,24 +8,52 @@ const instance: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
 });
 
-export interface ApiResponse<T> {
+instance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  config.headers["Content-Type"] = "application/json";
+  return config;
+});
+
+instance.interceptors.response.use(
+  (response) => {
+    console.log(response);
+
+    if (response.data && Array.isArray(response.data)) {
+      response.data = response.data.map((item) => ({
+        ...item,
+        createdAt: new Date(item.createdAt),
+      }));
+    }
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export interface IApiResponse<T> {
   data: T;
   status: number;
 }
 
 // Define API request functions
-export const get = async <T,>(url: string, params?: any): Promise<T> => {
+export const get = async <T,>(
+  url: string,
+  params?: any
+): Promise<IApiResponse<T>> => {
   try {
-    const response: AxiosResponse<T> = await instance.get(url, {
+    const response: IApiResponse<T> = await instance.get(url, {
       params,
     });
-    return response.data;
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;
@@ -35,11 +63,13 @@ export const get = async <T,>(url: string, params?: any): Promise<T> => {
 export const post = async <T,>(
   url: string,
   data?: any
-): Promise<ApiResponse<T>> => {
+): Promise<IApiResponse<T>> => {
   try {
-    const response: ApiResponse<T> = await instance.post(url, data);
-
-    return response;
+    const response: IApiResponse<T> = await instance.post(url, data);
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;

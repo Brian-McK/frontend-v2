@@ -3,8 +3,8 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input } from "antd";
 import {
   loginUser,
-  AuthenticationResponse,
-  AuthenticationRequest,
+  IAuthenticationResponse,
+  IAuthenticationRequest,
 } from "../../services/authservice";
 import { useAuth } from "../../context/AuthContext";
 
@@ -21,14 +21,14 @@ export const LoginForm: React.FC = () => {
 
   const auth = useAuth();
 
-  const onFinish = async (values: AuthenticationRequest) => {
+  const onFinish = async (values: IAuthenticationRequest) => {
     try {
-      const credentials: AuthenticationRequest = {
+      const credentials: IAuthenticationRequest = {
         username: values.username,
         password: values.password,
       };
 
-      const response: AuthenticationResponse = await loginUser(credentials);
+      const response: IAuthenticationResponse = await loginUser(credentials);
 
       if (response.authenticated) {
         auth.setLoggedIn(

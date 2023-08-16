@@ -45,9 +45,10 @@ export const Dashboard: React.FC = () => {
   const auth = useAuth();
 
   const handleLogout = async () => {
-    console.log("called");
     try {
       const response = await logoutUser();
+
+      // TODO - FIX HERE
 
       if (response) {
         auth.setLoggedOut();
@@ -67,7 +68,7 @@ export const Dashboard: React.FC = () => {
     ]),
     getItem("Skills", "sub2", <BookOutlined />, [
       getItem(
-        <Link to="/dashboard/manage-skills">Manage Employees</Link>,
+        <Link to="/dashboard/manage-skills">Manage Skills</Link>,
         "2",
         <EditOutlined />
       ),
@@ -115,7 +116,7 @@ export const Dashboard: React.FC = () => {
             style={{
               margin: "16px 8px",
               display: "flex",
-              justifyContent: "end",
+              justifyContent: "start",
             }}
             items={[{ title: "User" }, { title: "Bill" }]}
           />

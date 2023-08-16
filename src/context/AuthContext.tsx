@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Define the shape of your context
-interface AuthContextType {
+interface IAuthContext {
   user: string | null;
   token: string | null;
   setLoggedIn: (user: string, token: string) => void;
@@ -10,7 +10,7 @@ interface AuthContextType {
 }
 
 // Create the context
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 // Custom hook to access the context
 export const useAuth = () => {
@@ -38,11 +38,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
       setUser(storedUser);
       setToken(storedToken);
     }
-
-    console.log({
-      user: user,
-      token: token,
-    });
   }, []);
 
   const setLoggedIn = (user: string, token: string) => {
@@ -61,7 +56,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
     navigate("/");
   };
 
-  const authContextValue: AuthContextType = {
+  const authContextValue: IAuthContext = {
     user,
     token,
     setLoggedIn,
