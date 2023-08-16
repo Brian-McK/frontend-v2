@@ -16,9 +16,9 @@ export type AddNewSkillRequestType = {
   description: string;
 };
 
-export async function getAllSkills(): Promise<SkillsArray> {
+export async function getAllSkills<T>(): Promise<ApiResponse<T>> {
   try {
-    const skillsResponse = await get<SkillsArray>("/skilllevels");
+    const skillsResponse: ApiResponse<T> = await get("/skilllevels");
     return skillsResponse;
   } catch (error) {
     console.error("Error fetching skills: ", error);

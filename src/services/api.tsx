@@ -40,12 +40,18 @@ export interface ApiResponse<T> {
 }
 
 // Define API request functions
-export const get = async <T,>(url: string, params?: any): Promise<T> => {
+export const get = async <T,>(
+  url: string,
+  params?: any
+): Promise<ApiResponse<T>> => {
   try {
-    const response: AxiosResponse<T> = await instance.get(url, {
+    const response: ApiResponse<T> = await instance.get(url, {
       params,
     });
-    return response.data;
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;

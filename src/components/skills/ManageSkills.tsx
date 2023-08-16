@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { SkillsTable } from "./SkillsTable";
 import { Col, Row, Card } from "antd";
-import {
-  SkillsArray,
-  ISkill,
-  getAllSkills,
-} from "../../services/skillsservice";
+import { SkillsArray, getAllSkills } from "../../services/skillsservice";
 import { AddSkillForm } from "./AddSkillForm";
+
+type GetSkillsResponseType = {
+  data: SkillsArray;
+  status: number;
+};
 
 export const ManageSkills: React.FC = () => {
   const [skills, setSkills] = useState<SkillsArray | null>(null);
@@ -18,8 +19,8 @@ export const ManageSkills: React.FC = () => {
   useEffect(() => {
     async function fetchSkills() {
       try {
-        const skillsResponse = await getAllSkills();
-        setSkills(skillsResponse);
+        const skillsResponse: GetSkillsResponseType = await getAllSkills();
+        setSkills(skillsResponse.data);
         setLoading(false);
       } catch (error) {
         setLoading(false);

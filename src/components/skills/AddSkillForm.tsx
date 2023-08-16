@@ -33,6 +33,8 @@ export const AddSkillForm: React.FC = () => {
 
       const addSkillResponse = await addNewSkill(newSkill);
 
+      console.log(addSkillResponse);
+
       // FIX THE DATE - FIX THE RESPONSE STATUS - FETCH FOR SKILLS AGAIN
 
       if (addSkillResponse.status === 201) {
