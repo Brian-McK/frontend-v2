@@ -37,9 +37,8 @@ export const AddSkillForm: React.FC<AddSkillFormProps> = ({
 
       const addSkillResponse = await addNewSkill(newSkill);
 
-      // FIX THE DATE
-
       if (addSkillResponse.status === 201) {
+        form.resetFields();
         // trigger for refetching skills
         onMutationResolved(true);
       }

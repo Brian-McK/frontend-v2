@@ -21,10 +21,12 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response) => {
+    console.log(response);
+
     if (response.data && Array.isArray(response.data)) {
       response.data = response.data.map((item) => ({
         ...item,
-        createdAt: new Date(item.createdAt).toLocaleDateString("en-GB"),
+        createdAt: new Date(item.createdAt),
       }));
     }
     return response;
