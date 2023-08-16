@@ -38,11 +38,6 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
       setUser(storedUser);
       setToken(storedToken);
     }
-
-    console.log({
-      user: user,
-      token: token,
-    });
   }, []);
 
   const setLoggedIn = (user: string, token: string) => {

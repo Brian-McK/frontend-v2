@@ -7,6 +7,7 @@ import {
   ISkill,
 } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
+import { ApiResponse } from "../../services/api";
 
 type ErrorWithResponseDataMessage = {
   response: {
@@ -22,21 +23,22 @@ export const AddSkillForm: React.FC = () => {
   const auth = useAuth();
 
   const onFinish = async (values: AddNewSkillRequestType) => {
-    const today = new Date();
-
     try {
       const newSkill: AddNewSkillRequestType = {
         name: values.name,
-        description: values.description
+        description: values.description,
       };
 
       console.log(newSkill);
 
-      const response: ISkill = await addNewSkill(newSkill);
+      const addSkillResponse = await addNewSkill(newSkill);
 
-      // FIX THE DATE
+      // FIX THE DATE - FIX THE RESPONSE STATUS - FETCH FOR SKILLS AGAIN
 
-      console.log(response);
+      if (addSkillResponse.status === 201) {
+        // fetch again for skills
+        console.log(addSkillResponse);
+      }
 
       // return 201 created, need to change the type, also add loading state
     } catch (error) {

@@ -19,9 +19,6 @@ export type AddNewSkillRequestType = {
 export async function getAllSkills(): Promise<SkillsArray> {
   try {
     const skillsResponse = await get<SkillsArray>("/skilllevels");
-
-    console.log(skillsResponse);
-
     return skillsResponse;
   } catch (error) {
     console.error("Error fetching skills: ", error);
@@ -29,15 +26,16 @@ export async function getAllSkills(): Promise<SkillsArray> {
   }
 }
 
-export async function addNewSkill(
+export async function addNewSkill<T>(
   newSkill: AddNewSkillRequestType
-): Promise<ISkill> {
+): Promise<ApiResponse<T>> {
   try {
-    const addNewSkillResponse = await post<ISkill>("/skilllevels", newSkill);
+    const addNewSkillResponse: ApiResponse<T> = await post(
+      "/skilllevels",
+      newSkill
+    );
 
-    console.log(addNewSkillResponse);
-
-    return addNewSkillResponse.data;
+    return addNewSkillResponse;
   } catch (error) {
     console.error("Error adding new skill: ", error);
     throw error;

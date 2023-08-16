@@ -58,8 +58,10 @@ export const post = async <T,>(
 ): Promise<ApiResponse<T>> => {
   try {
     const response: ApiResponse<T> = await instance.post(url, data);
-
-    return response;
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;

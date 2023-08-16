@@ -45,9 +45,10 @@ export const Dashboard: React.FC = () => {
   const auth = useAuth();
 
   const handleLogout = async () => {
-    console.log("called");
     try {
       const response = await logoutUser();
+
+      // TODO - FIX HERE
 
       if (response) {
         auth.setLoggedOut();
