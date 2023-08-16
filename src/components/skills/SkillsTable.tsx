@@ -6,6 +6,7 @@ import { Button, Input, Space, Table } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import { ISkill, ISkillsArray } from "../../services/skillsservice";
+import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 type SkillTableProps = {
   skills: ISkillsArray | null;
@@ -13,6 +14,8 @@ type SkillTableProps = {
 };
 
 type SkillDataIndex = ISkill["_id"];
+
+// TODO - ADD HORIZONTAL SCROLL TO TABLE, MAKE IT BETTER RESPONSIVE
 
 export const SkillsTable: React.FC<SkillTableProps> = ({
   skills,
@@ -159,6 +162,17 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
       },
       render: (createdAt) => new Date(createdAt).toLocaleDateString(),
       sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <EyeOutlined style={{ color: "blue" }} />
+          <EditOutlined style={{ color: "green" }} />
+          <DeleteOutlined style={{ color: "red" }} />
+        </Space>
+      ),
     },
   ];
 
