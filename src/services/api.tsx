@@ -19,23 +19,6 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
-instance.interceptors.response.use(
-  (response) => {
-    console.log(response);
-
-    if (response.data && Array.isArray(response.data)) {
-      response.data = response.data.map((item) => ({
-        ...item,
-        createdAt: new Date(item.createdAt),
-      }));
-    }
-    return response;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
 export interface IApiResponse<T> {
   data: T;
   status: number;
@@ -96,10 +79,18 @@ export const patch = async <T,>(url: string, data: any): Promise<T> => {
   }
 };
 
-export const del = async <T,>(url: string): Promise<T> => {
+export const del = async <T,>(
+  url: string,
+  id: string
+): Promise<IApiResponse<T>> => {
+  const deleteUrl = `${url}/${id}`;
+
   try {
-    const response: AxiosResponse<T> = await instance.delete(url);
-    return response.data;
+    const response: IApiResponse<T> = await instance.delete(deleteUrl);
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;

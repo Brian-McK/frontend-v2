@@ -1,11 +1,11 @@
 import React from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import {
   addNewSkill,
   AddNewSkillRequestType,
 } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
+import { IMutationResolved } from "../../Interfaces/MutationInterface";
 
 type ErrorWithResponseDataMessage = {
   response: {
@@ -15,11 +15,9 @@ type ErrorWithResponseDataMessage = {
   };
 };
 
-interface AddSkillFormProps {
-  onMutationResolved: (data: boolean) => void;
-}
-
 const { TextArea } = Input;
+
+type AddSkillFormProps = {} & IMutationResolved;
 
 export const AddSkillForm: React.FC<AddSkillFormProps> = ({
   onMutationResolved,
@@ -43,6 +41,7 @@ export const AddSkillForm: React.FC<AddSkillFormProps> = ({
         onMutationResolved(true);
       }
     } catch (error) {
+      onMutationResolved(false);
       console.error(error); // TODO- ERROR STATE
     }
   };

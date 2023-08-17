@@ -57,7 +57,11 @@ export const ManageSkills: React.FC = () => {
         </Col>
         <Col sm={24} lg={16}>
           <Card title={"Skill levels"} loading={loading}>
-            <SkillsTable isLoadingSkills={loading} skills={skills} />
+            <SkillsTable
+              onMutationResolved={handleMutationResolvedStatus}
+              isLoadingSkills={loading}
+              skills={skills}
+            />
           </Card>
         </Col>
       </Row>
