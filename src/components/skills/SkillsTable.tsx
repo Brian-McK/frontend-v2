@@ -9,6 +9,8 @@ import { ISkill, ISkillsArray } from "../../services/skillsservice";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { deleteSkill } from "../../services/skillsservice";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../services/api";
 
 type SkillTableProps = {
   skills: ISkillsArray | null;
@@ -27,6 +29,8 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
   const [searchText, setSearchText] = useState<any | null>(null);
   const [searchedColumn, setSearchedColumn] = useState<string | null>(null);
   const searchInput = useRef<InputRef | null>(null);
+
+  const navigate = useNavigate();
 
   const handleSearch = (
     selectedKeys: string[],
@@ -59,6 +63,22 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     }
 
     // TODO - Confirmation modal
+  };
+
+  const handleViewSkillNavigate = async (value: ISkill) => {
+    const { _id } = value;
+
+    navigate(`view/${_id}`, {
+      state: { skill: value },
+    });
+  };
+
+  const handleEditSkillNavigate = async (value: ISkill) => {
+    const { _id } = value;
+
+    navigate(`edit/${_id}`, {
+      state: { skill: value },
+    });
   };
 
   const getColumnSearchProps = (
@@ -195,6 +215,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
               shape="circle"
               size={"small"}
               icon={<EyeOutlined />}
+              onClick={() => handleViewSkillNavigate(record)}
             />
           </Tooltip>
           <Tooltip title="Edit skill">
@@ -203,6 +224,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
               shape="circle"
               size={"small"}
               icon={<EditOutlined />}
+              onClick={() => handleEditSkillNavigate(record)}
             />
           </Tooltip>
           <Tooltip title="Delete skill">
