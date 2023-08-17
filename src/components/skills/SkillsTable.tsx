@@ -2,21 +2,27 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Space, Table, Tooltip } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import { ISkill, ISkillsArray } from "../../services/skillsservice";
+import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { deleteSkill } from "../../services/skillsservice";
+import { IMutationResolved } from "../../Interfaces/MutationInterface";
 
 type SkillTableProps = {
   skills: ISkillsArray | null;
   isLoadingSkills: boolean;
-};
+} & IMutationResolved;
 
 type SkillDataIndex = ISkill["_id"];
+
+// TODO - ADD HORIZONTAL SCROLL TO TABLE, MAKE IT BETTER RESPONSIVE
 
 export const SkillsTable: React.FC<SkillTableProps> = ({
   skills,
   isLoadingSkills,
+  onMutationResolved,
 }: SkillTableProps) => {
   const [searchText, setSearchText] = useState<any | null>(null);
   const [searchedColumn, setSearchedColumn] = useState<string | null>(null);
@@ -35,6 +41,24 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const handleDeleteSkill = async (value: ISkill) => {
+    try {
+      const { _id } = value;
+
+      const deleteSkillResponse = await deleteSkill(_id);
+
+      if (deleteSkillResponse.status === 200) {
+        // trigger for refetching skills
+        onMutationResolved(true);
+      }
+    } catch (error) {
+      onMutationResolved(false);
+      console.error(error); // TODO- ERROR STATE
+    }
+
+    // TODO - Confirmation modal
   };
 
   const getColumnSearchProps = (
@@ -159,6 +183,39 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
       },
       render: (createdAt) => new Date(createdAt).toLocaleDateString(),
       sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Space size="middle">
+          <Tooltip title="View skill">
+            <Button
+              type="primary"
+              shape="circle"
+              size={"small"}
+              icon={<EyeOutlined />}
+            />
+          </Tooltip>
+          <Tooltip title="Edit skill">
+            <Button
+              type="primary"
+              shape="circle"
+              size={"small"}
+              icon={<EditOutlined />}
+            />
+          </Tooltip>
+          <Tooltip title="Delete skill">
+            <Button
+              type="primary"
+              shape="circle"
+              size={"small"}
+              icon={<DeleteOutlined />}
+              onClick={() => handleDeleteSkill(record)}
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 

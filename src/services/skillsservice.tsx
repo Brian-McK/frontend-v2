@@ -1,4 +1,4 @@
-import { IApiResponse, get, post } from "./api";
+import { IApiResponse, del, get, post } from "./api";
 
 export interface ISkill {
   _id: string;
@@ -34,6 +34,22 @@ export async function addNewSkill<T>(
     );
 
     return addNewSkillResponse;
+  } catch (error) {
+    console.error("Error adding new skill: ", error);
+    throw error;
+  }
+}
+
+export async function deleteSkill<T>(
+  skillToDelete: string
+): Promise<IApiResponse<T>> {
+  try {
+    const deleteSkillResponse: IApiResponse<T> = await del(
+      "/skilllevels",
+      skillToDelete
+    );
+
+    return deleteSkillResponse;
   } catch (error) {
     console.error("Error adding new skill: ", error);
     throw error;
