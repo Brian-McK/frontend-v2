@@ -55,10 +55,14 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
 
       if (deleteSkillResponse.status === 200) {
         // trigger for refetching skills
-        onMutationResolved(true);
+        if (onMutationResolved) {
+          onMutationResolved(true);
+        }
       }
     } catch (error) {
-      onMutationResolved(false);
+      if (onMutationResolved) {
+        onMutationResolved(false);
+      }
       console.error(error); // TODO- ERROR STATE
     }
 

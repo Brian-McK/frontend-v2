@@ -59,20 +59,18 @@ export const post = async <T,>(
   }
 };
 
-export const put = async <T,>(url: string, data: any): Promise<T> => {
+export const put = async <T,>(
+  url: string,
+  id: string,
+  data: any
+): Promise<IApiResponse<T>> => {
+  const updateUrl = `${url}/${id}`;
   try {
-    const response: AxiosResponse<T> = await instance.put(url, data);
-    return response.data;
-  } catch (error) {
-    handleApiError(error);
-    throw error;
-  }
-};
-
-export const patch = async <T,>(url: string, data: any): Promise<T> => {
-  try {
-    const response: AxiosResponse<T> = await instance.patch(url, data);
-    return response.data;
+    const response: IApiResponse<T> = await instance.put(updateUrl, data);
+    return {
+      data: response.data,
+      status: response.status,
+    };
   } catch (error) {
     handleApiError(error);
     throw error;

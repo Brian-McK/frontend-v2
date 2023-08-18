@@ -1,3 +1,3 @@
 export interface IMutationResolved {
-  onMutationResolved: (data: boolean) => void;
+  onMutationResolved?: (data: boolean) => void;
 }
