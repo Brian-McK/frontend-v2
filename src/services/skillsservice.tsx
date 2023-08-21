@@ -71,7 +71,7 @@ export async function deleteSkill<T>(
 
     return deleteSkillResponse;
   } catch (error) {
-    console.error("Error adding new skill: ", error);
+    console.error("Error deleting skill: ", error);
     throw error;
   }
 }
