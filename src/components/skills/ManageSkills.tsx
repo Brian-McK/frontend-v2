@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { SkillsTable } from "./SkillsTable";
 import { Col, Row, Card } from "antd";
 import { ISkillsArray, getAllSkills } from "../../services/skillsservice";
-import { AddSkillForm } from "./AddSkillForm";
+import { SkillForm } from "./SkillForm";
 
 type GetSkillsResponseType = {
   data: ISkillsArray;
@@ -52,7 +52,7 @@ export const ManageSkills: React.FC = () => {
       <Row gutter={16}>
         <Col sm={24} lg={8}>
           <Card title={"Add a skill"} loading={loading}>
-            <AddSkillForm onMutationResolved={handleMutationResolvedStatus} />
+            <SkillForm onMutationResolved={handleMutationResolvedStatus} />
           </Card>
         </Col>
         <Col sm={24} lg={16}>

@@ -4,6 +4,9 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./components/login/Login";
 import { ManageEmployees } from "./components/employees/ManageEmployees";
 import { ManageSkills } from "./components/skills/ManageSkills";
+import { ViewSkill } from "./components/skills/ViewSkill";
+import { NotFound } from "./components/dashboard/NotFound";
+import { EditSkill } from "./components/skills/EditSkill";
 
 const App: React.FC = () => (
   <>
@@ -33,6 +36,8 @@ function DashboardRoutes() {
         <Route index element={<ManageEmployees />} />
         <Route path="manage-employees" element={<ManageEmployees />} />
         <Route path="manage-skills" element={<ManageSkills />} />
+        <Route path="manage-skills/view/:skillId" element={<ViewSkill />} />
+        <Route path="manage-skills/edit/:skillId" element={<EditSkill />} />
       </Route>
     </Routes>
   );

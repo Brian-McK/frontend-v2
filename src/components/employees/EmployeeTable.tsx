@@ -5,27 +5,29 @@ import type { InputRef } from "antd";
 import { Button, Input, Space, Table, Tooltip } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
-import { ISkill, ISkillsArray } from "../../services/skillsservice";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { deleteSkill } from "../../services/skillsservice";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../services/api";
+import {
+  IEmployee,
+  IEmployeeArray,
+  deleteEmployee,
+} from "../../services/employeeservice";
 
-type SkillTableProps = {
-  skills: ISkillsArray | null;
-  isLoadingSkills: boolean;
+type EmployeeTableProps = {
+  employees: IEmployeeArray | null;
+  isLoadingEmployees: boolean;
 } & IMutationResolved;
 
-type SkillDataIndex = ISkill["_id"];
+type EmployeeDataIndex = IEmployee["_id"];
 
 // TODO - ADD HORIZONTAL SCROLL TO TABLE, MAKE IT BETTER RESPONSIVE
 
-export const SkillsTable: React.FC<SkillTableProps> = ({
-  skills,
-  isLoadingSkills,
+export const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  employees,
+  isLoadingEmployees,
   onMutationResolved,
-}: SkillTableProps) => {
+}: EmployeeTableProps) => {
   const [searchText, setSearchText] = useState<any | null>(null);
   const [searchedColumn, setSearchedColumn] = useState<string | null>(null);
   const searchInput = useRef<InputRef | null>(null);
@@ -35,7 +37,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: SkillDataIndex
+    dataIndex: EmployeeDataIndex
   ) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -47,14 +49,14 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     setSearchText("");
   };
 
-  const handleDeleteSkill = async (value: ISkill) => {
+  const handleDeleteEmployee = async (value: IEmployee) => {
     try {
       const { _id } = value;
 
-      const deleteSkillResponse = await deleteSkill(_id);
+      const deleteEmployeeResponse = await deleteEmployee(_id);
 
-      if (deleteSkillResponse.status === 200) {
-        // trigger for refetching skills
+      if (deleteEmployeeResponse.status === 200) {
+        // trigger for refetching employees
         if (onMutationResolved) {
           onMutationResolved(true);
         }
@@ -69,25 +71,25 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     // TODO - Confirmation modal
   };
 
-  const handleViewSkillNavigate = async (value: ISkill) => {
+  const handleViewEmployeeNavigate = async (value: IEmployee) => {
     const { _id } = value;
 
     navigate(`view/${_id}`, {
-      state: { skill: value },
+      state: { employee: value },
     });
   };
 
-  const handleEditSkillNavigate = async (value: ISkill) => {
+  const handleEditEmployeeNavigate = async (value: IEmployee) => {
     const { _id } = value;
 
     navigate(`edit/${_id}`, {
-      state: { skill: value },
+      state: { employee: value },
     });
   };
 
   const getColumnSearchProps = (
-    dataIndex: SkillDataIndex
-  ): ColumnType<ISkill> => ({
+    dataIndex: EmployeeDataIndex
+  ): ColumnType<IEmployee> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -154,7 +156,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      (record[dataIndex as keyof ISkill] as string)
+      (record[dataIndex as keyof IEmployee] as string)
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
@@ -176,23 +178,50 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
       ),
   });
 
-  const columns: ColumnsType<ISkill> = [
+  const columns: ColumnsType<IEmployee> = [
     {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      width: "30%",
-      ...getColumnSearchProps("name"),
-      sorter: (a, b) => a.name.localeCompare(b.name),
+      title: "First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+      width: "10%",
+      ...getColumnSearchProps("firstName"),
+      sorter: (a, b) => a.firstName.localeCompare(b.firstName),
       sortDirections: ["descend", "ascend"],
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      width: "60%",
-      ...getColumnSearchProps("description"),
-      sorter: (a, b) => a.description.localeCompare(b.description),
+      title: "Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      width: "10%",
+      ...getColumnSearchProps("lastName"),
+      sorter: (a, b) => a.lastName.localeCompare(b.lastName),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      width: "10%",
+      ...getColumnSearchProps("email"),
+      sorter: (a, b) => a.email.localeCompare(b.email),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      width: "10%",
+      ...getColumnSearchProps("isActive"),
+      sorter: (a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+      width: "10%",
+      ...getColumnSearchProps("age"),
+      sorter: (a, b) => a.age - b.age,
       sortDirections: ["descend", "ascend"],
     },
     {
@@ -213,31 +242,31 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
       key: "actions",
       render: (_, record) => (
         <Space size="middle">
-          <Tooltip title="View skill">
+          <Tooltip title="View employee">
             <Button
               type="primary"
               shape="circle"
               size={"small"}
               icon={<EyeOutlined />}
-              onClick={() => handleViewSkillNavigate(record)}
+              onClick={() => handleViewEmployeeNavigate(record)}
             />
           </Tooltip>
-          <Tooltip title="Edit skill">
+          <Tooltip title="Edit employee">
             <Button
               type="primary"
               shape="circle"
               size={"small"}
               icon={<EditOutlined />}
-              onClick={() => handleEditSkillNavigate(record)}
+              onClick={() => handleEditEmployeeNavigate(record)}
             />
           </Tooltip>
-          <Tooltip title="Delete skill">
+          <Tooltip title="Delete employee">
             <Button
               type="primary"
               shape="circle"
               size={"small"}
               icon={<DeleteOutlined />}
-              onClick={() => handleDeleteSkill(record)}
+              onClick={() => handleDeleteEmployee(record)}
             />
           </Tooltip>
         </Space>
@@ -245,15 +274,18 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     },
   ];
 
-  if (skills === null) {
+  if (employees === null) {
     return <div>Loading or error message...</div>;
   }
 
   return (
     <Table
-      loading={isLoadingSkills}
+      loading={isLoadingEmployees}
       columns={columns}
-      dataSource={skills.map((skill) => ({ ...skill, key: skill._id }))}
+      dataSource={employees.map((employee) => ({
+        ...employee,
+        key: employee._id,
+      }))}
     />
   );
 };
