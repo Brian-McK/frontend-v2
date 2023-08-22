@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Col, Row, Card } from "antd";
 import { EmployeeForm } from "./EmployeeForm";
 import { EmployeeTable } from "./EmployeeTable";
-import {
-  IEmployeeArray,
-  getAllEmployees,
-} from "../../services/employeeservice";
+import { IEmployeeArray } from "../../services/employeeservice";
+import { ISkillsArray } from "../../services/skillsservice";
 
-type GetEmployeesResponseType = {
-  data: IEmployeeArray;
-  status: number;
+type ManageEmployeesProps = {
+  initialEmployees: IEmployeeArray | null;
+  initialSkills: ISkillsArray | null;
+  initialLoading: boolean;
 };
 
-export const ManageEmployees: React.FC = () => {
-  const [employees, setEmployees] = useState<IEmployeeArray | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+export const ManageEmployees: React.FC<ManageEmployeesProps> = ({
+  initialEmployees,
+  initialSkills,
+  initialLoading,
+}: ManageEmployeesProps) => {
   const [error, setError] = useState<string | null>(null); // TODO - ERROR STATE
   const [
     requestRefetchEmployeesFromMutation,
@@ -25,45 +26,43 @@ export const ManageEmployees: React.FC = () => {
     setRequestRefetchEmployesFromMutation(data);
   };
 
-  // call to api
+  // const fetchEmployees = async () => {
+  //   try {
+  //     const employeesResponse: GetEmployeesResponseType =
+  //       await getAllEmployees();
+  //     setEmployees(employeesResponse.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     setLoading(false);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const fetchEmployees = async () => {
-    try {
-      const employeesResponse: GetEmployeesResponseType =
-        await getAllEmployees();
-      setEmployees(employeesResponse.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // useEffect(() => {
+  //   if (requestRefetchEmployeesFromMutation) {
+  //     fetchEmployees();
+  //     setRequestRefetchEmployesFromMutation(false);
+  //   }
+  // }, [requestRefetchEmployeesFromMutation]);
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
-  useEffect(() => {
-    if (requestRefetchEmployeesFromMutation) {
-      fetchEmployees();
-      setRequestRefetchEmployesFromMutation(false);
-    }
-  }, [requestRefetchEmployeesFromMutation]);
   return (
     <>
       <Row gutter={16}>
         <Col sm={24} lg={8}>
-          <Card title={"Add an employee"} loading={loading}>
-            <EmployeeForm onMutationResolved={handleMutationResolvedStatus} />
+          <Card title={"Add an employee"} loading={initialLoading}>
+            <EmployeeForm
+              skillsToSelect={initialSkills}
+              onMutationResolved={handleMutationResolvedStatus}
+            />
           </Card>
         </Col>
         <Col sm={24} lg={16}>
-          <Card title={"Employees"} loading={loading}>
+          <Card title={"Employees"} loading={initialLoading}>
             <EmployeeTable
               onMutationResolved={handleMutationResolvedStatus}
-              isLoadingEmployees={loading}
-              employees={employees}
+              isLoadingEmployees={initialLoading}
+              employees={initialEmployees}
             />
           </Card>
         </Col>

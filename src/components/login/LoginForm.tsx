@@ -35,7 +35,6 @@ export const LoginForm: React.FC = () => {
           response.authenticated.username,
           response.authenticated.jwtToken
         );
-        console.log("User authenticated:", response);
       }
     } catch (error) {
       auth.setLoggedOut();

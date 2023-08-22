@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import { Button, Checkbox, Form, Input, DatePicker } from "antd";
-import {
-  addNewSkill,
-  updateSkill, // Import the updateSkill function
-  AddNewSkillRequestType,
-} from "../../services/skillsservice";
+import { Button, Checkbox, Form, Input, DatePicker, Row, Col } from "antd";
+import { ISkillsArray } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import {
@@ -14,13 +10,11 @@ import {
   addNewEmployee,
 } from "../../services/employeeservice";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
-import type { DatePickerProps } from "antd";
 import dayjs from "dayjs";
-
-const { TextArea } = Input;
 
 type EmployeeFormProps = {
   initialEmployee?: IEmployee;
+  skillsToSelect: ISkillsArray | null; // change null here later
 } & IMutationResolved;
 
 export const EmployeeForm: React.FC<EmployeeFormProps> = ({
@@ -37,8 +31,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     setIsActive(e.target.checked);
   };
 
-  console.log(active);
-
   const onFinish = async (values: AddNewEmployeeRequestType) => {
     try {
       if (initialEmployee) {
@@ -50,8 +42,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           isActive: active,
           skillLevels: [],
         };
-
-        console.log(updatedEmployee);
 
         // const updateEmployeeResponse = await updateEmployee(
         //   initialEmployee._id,
@@ -72,8 +62,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           isActive: active,
           skillLevels: [],
         };
-
-        console.log(newEmployee);
 
         const addEmployeeResponse = await addNewEmployee(newEmployee);
 
@@ -126,22 +114,34 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
         <Input placeholder="Email" />
       </Form.Item>
 
-      <Form.Item label="Status" name="isActive">
-        <Checkbox defaultChecked={true} onChange={onChangeIsActiveHandler}>
-          {active ? "Active" : "Not Active"}
-        </Checkbox>
-      </Form.Item>
-
-      <Form.Item
-        label="Date of birth"
-        name="dob"
-        rules={[{ required: true, message: "Please input date of birth" }]}
-      >
-        <DatePicker
-          // value={dayjs().subtract(18, "year")}
-          format={dateFormat}
-        />
-      </Form.Item>
+      <Input.Group>
+        <Row justify={"space-evenly"}>
+          <Col>
+            <Form.Item label="Status" name="isActive" valuePropName="checked">
+              <Checkbox
+                defaultChecked={true}
+                onChange={onChangeIsActiveHandler}
+              >
+                {active ? "Active" : "Not Active"}
+              </Checkbox>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item
+              label="Date of birth"
+              name="dob"
+              rules={[
+                { required: true, message: "Please input date of birth" },
+              ]}
+            >
+              <DatePicker
+                // value={dayjs().subtract(18, "year")}
+                format={dateFormat}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Input.Group>
 
       <Form.Item>
         <Button
