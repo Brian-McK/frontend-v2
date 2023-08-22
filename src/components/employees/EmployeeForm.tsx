@@ -7,9 +7,15 @@ import {
 } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
-import { IEmployee } from "../../services/employeeservice";
+import {
+  AddNewEmployeeRequestType,
+  IEmployee,
+  UpdateEmployeeRequestType,
+  addNewEmployee,
+} from "../../services/employeeservice";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import type { DatePickerProps } from "antd";
+import dayjs from "dayjs";
 
 const { TextArea } = Input;
 
@@ -23,7 +29,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 }: EmployeeFormProps) => {
   const [form] = Form.useForm();
 
-  const [active, setIsActive] = useState<boolean>(false);
+  const [active, setIsActive] = useState<boolean>(true);
 
   const auth = useAuth();
 
@@ -31,40 +37,47 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     setIsActive(e.target.checked);
   };
 
-  const onChangeDateHandler: DatePickerProps["onChange"] = (
-    date,
-    dateString
-  ) => {
-    console.log(dateString);
-  };
+  console.log(active);
 
-  const onFinish = async (values: AddNewSkillRequestType) => {
+  const onFinish = async (values: AddNewEmployeeRequestType) => {
     try {
       if (initialEmployee) {
-        const updatedSkill: AddNewSkillRequestType = {
-          name: values.name,
-          description: values.description,
+        const updatedEmployee: UpdateEmployeeRequestType = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          dob: values.dob,
+          email: values.email,
+          isActive: active,
+          skillLevels: [],
         };
 
-        const updateSkillResponse = await updateSkill(
-          initialEmployee._id,
-          updatedSkill
-        );
+        console.log(updatedEmployee);
 
-        if (updateSkillResponse.status === 200) {
-          if (onMutationResolved) {
-            onMutationResolved(true);
-          }
-        }
+        // const updateEmployeeResponse = await updateEmployee(
+        //   initialEmployee._id,
+        //   updatedEmployee
+        // );
+
+        // if (updateEmployeeResponse.status === 200) {
+        //   if (onMutationResolved) {
+        //     onMutationResolved(true);
+        //   }
+        // }
       } else {
-        const newSkill: AddNewSkillRequestType = {
-          name: values.name,
-          description: values.description,
+        const newEmployee: AddNewEmployeeRequestType = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          dob: dayjs(values.dob).format(dateFormat),
+          email: values.email,
+          isActive: active,
+          skillLevels: [],
         };
 
-        const addSkillResponse = await addNewSkill(newSkill);
+        console.log(newEmployee);
 
-        if (addSkillResponse.status === 201) {
+        const addEmployeeResponse = await addNewEmployee(newEmployee);
+
+        if (addEmployeeResponse.status === 201) {
           form.resetFields();
           if (onMutationResolved) {
             onMutationResolved(true);
@@ -79,6 +92,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
   };
 
+  const dateFormat = "YYYY-MM-DD";
+
   return (
     <Form
       form={form}
@@ -90,14 +105,14 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     >
       <Form.Item
         label="First name"
-        name="first name"
+        name="firstName"
         rules={[{ required: true, message: "Please input first name" }]}
       >
         <Input placeholder="First name" />
       </Form.Item>
       <Form.Item
         label="Last name"
-        name="Last name"
+        name="lastName"
         rules={[{ required: true, message: "Please input last name" }]}
       >
         <Input placeholder="Last name" />
@@ -105,18 +120,14 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
       <Form.Item
         label="Email"
-        name="Email"
+        name="email"
         rules={[{ required: true, message: "Please input email" }]}
       >
         <Input placeholder="Email" />
       </Form.Item>
 
-      <Form.Item label="Status" name="Active">
-        <Checkbox
-          defaultChecked={false}
-          checked={active}
-          onChange={onChangeIsActiveHandler}
-        >
+      <Form.Item label="Status" name="isActive">
+        <Checkbox defaultChecked={true} onChange={onChangeIsActiveHandler}>
           {active ? "Active" : "Not Active"}
         </Checkbox>
       </Form.Item>
@@ -126,7 +137,10 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
         name="dob"
         rules={[{ required: true, message: "Please input date of birth" }]}
       >
-        <DatePicker format={"YYYY-MM-DD"} onChange={onChangeDateHandler} />
+        <DatePicker
+          // value={dayjs().subtract(18, "year")}
+          format={dateFormat}
+        />
       </Form.Item>
 
       <Form.Item>

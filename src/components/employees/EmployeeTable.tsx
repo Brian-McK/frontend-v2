@@ -32,6 +32,8 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
   const [searchedColumn, setSearchedColumn] = useState<string | null>(null);
   const searchInput = useRef<InputRef | null>(null);
 
+  console.log(employees);
+
   const navigate = useNavigate();
 
   const handleSearch = (
@@ -212,7 +214,9 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       key: "isActive",
       width: "10%",
       ...getColumnSearchProps("isActive"),
-      sorter: (a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1),
+      render: (isActive) => isActive.toString(),
+      sorter: (a, b) =>
+        a.isActive.toString().localeCompare(b.isActive.toString()),
       sortDirections: ["descend", "ascend"],
     },
     {
