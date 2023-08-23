@@ -9,6 +9,8 @@ import { NotFound } from "./components/dashboard/NotFound";
 import { EditSkill } from "./components/skills/EditSkill";
 import { IEmployeeArray, getAllEmployees } from "./services/employeeservice";
 import { ISkillsArray, getAllSkills } from "./services/skillsservice";
+import { ViewEmployee } from "./components/employees/ViewEmployee";
+import { EditEmployee } from "./components/employees/EditEmployee";
 
 const App: React.FC = () => (
   <>
@@ -88,6 +90,11 @@ function DashboardRoutes() {
             />
           }
         />
+        <Route
+          path="manage-employees/view/:employeeId"
+          element={<ViewEmployee />}
+        />
+        <Route path="manage-employees/edit/:employeeId" element={<EditEmployee />} />
         <Route
           path="manage-skills"
           element={

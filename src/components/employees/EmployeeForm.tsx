@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Checkbox, Form, Input, DatePicker, Row, Col } from "antd";
 import { ISkillsArray } from "../../services/skillsservice";
 import { useAuth } from "../../context/AuthContext";
@@ -13,7 +13,7 @@ import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import dayjs from "dayjs";
 
 type EmployeeFormProps = {
-  initialEmployee?: IEmployee;
+  initialEmployee?: any; // TODO - fix later - dob field not in IEmployee
   skillsToSelect: ISkillsArray | null; // change null here later
 } & IMutationResolved;
 
@@ -22,10 +22,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialEmployee,
 }: EmployeeFormProps) => {
   const [form] = Form.useForm();
-
   const [active, setIsActive] = useState<boolean>(true);
 
-  const auth = useAuth();
+  console.log(initialEmployee);
 
   const onChangeIsActiveHandler = (e: CheckboxChangeEvent) => {
     setIsActive(e.target.checked);
@@ -81,6 +80,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   };
 
   const dateFormat = "YYYY-MM-DD";
+  // const initialEmployeeExtend = initialEmployee;
+  // console.log(initialEmployeeExtend?.dob);
+  // initialEmployeeExtend.dob = dayjs(initialEmployee.dob);
 
   return (
     <Form

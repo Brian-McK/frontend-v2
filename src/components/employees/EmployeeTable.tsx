@@ -11,12 +11,16 @@ import { useNavigate } from "react-router-dom";
 import {
   IEmployee,
   IEmployeeArray,
+  UpdateEmployeeRequestType,
   deleteEmployee,
 } from "../../services/employeeservice";
+import { ISkillsArray } from "../../services/skillsservice";
+import dayjs from "dayjs";
 
 type EmployeeTableProps = {
   employees: IEmployeeArray | null;
   isLoadingEmployees: boolean;
+  skills: ISkillsArray | null;
 } & IMutationResolved;
 
 type EmployeeDataIndex = IEmployee["_id"];
@@ -26,6 +30,7 @@ type EmployeeDataIndex = IEmployee["_id"];
 export const EmployeeTable: React.FC<EmployeeTableProps> = ({
   employees,
   isLoadingEmployees,
+  skills,
   onMutationResolved,
 }: EmployeeTableProps) => {
   const [searchText, setSearchText] = useState<any | null>(null);
@@ -79,11 +84,25 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     });
   };
 
-  const handleEditEmployeeNavigate = async (value: IEmployee) => {
+  const handleEditEmployeeNavigate = async (value: any) => {
     const { _id } = value;
 
+    const populateEditEmployeeFormInitialValues: any = {
+      firstName: value.firstName,
+      lastName: value.lastName,
+      dob: dayjs(value.dob).format("YYYY-MM-DD"),
+      email: value.email,
+      isActive: value.isActive,
+      skillLevels: value.skillLevels,
+    };
+
+    console.log(populateEditEmployeeFormInitialValues);
+
     navigate(`edit/${_id}`, {
-      state: { employee: value },
+      state: {
+        employee: populateEditEmployeeFormInitialValues,
+        skills: skills,
+      },
     });
   };
 

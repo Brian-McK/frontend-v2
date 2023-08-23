@@ -62,6 +62,7 @@ export const ManageEmployees: React.FC<ManageEmployeesProps> = ({
             <EmployeeTable
               onMutationResolved={handleMutationResolvedStatus}
               isLoadingEmployees={initialLoading}
+              skills={initialSkills}
               employees={initialEmployees}
             />
           </Card>
