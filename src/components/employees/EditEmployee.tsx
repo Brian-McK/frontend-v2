@@ -23,8 +23,6 @@ export const EditEmployee: React.FC = () => {
   const employeeData: any = state.employee;
   const skillData: ISkillsArray = state.skills;
 
-  console.log(employeeData);
-
   const handleMutationResolvedStatus = (data: boolean) => {
     console.log("handleMutationResolvedStatus: ", data);
     // setRequestRefetchSkillsFromMutation(data);
@@ -40,7 +38,7 @@ export const EditEmployee: React.FC = () => {
     <>
       <Row>
         <Col span={24}>
-          <Card title={`${employeeData.firstName}`}>
+          <Card title={`Edit employee: ${employeeData.firstName}`}>
             <Row gutter={16}>
               <Col
                 xs={24}
@@ -76,7 +74,7 @@ export const EditEmployee: React.FC = () => {
                     icon={<RollbackOutlined />}
                     onClick={handleReturnToEmployees}
                   >
-                    Return to skills
+                    Return to employees
                   </Button>
                 </Tooltip>
               </Col>

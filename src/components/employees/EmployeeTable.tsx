@@ -1,4 +1,8 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+} from "@ant-design/icons";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
@@ -76,16 +80,28 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     // TODO - Confirmation modal
   };
 
-  const handleViewEmployeeNavigate = async (value: IEmployee) => {
+  const handleViewEmployeeNavigate = async (value: any) => {
     const { _id } = value;
 
+    const populateViewEmployeeFormInitialValues: any = {
+      firstName: value.firstName,
+      lastName: value.lastName,
+      dob: dayjs(value.dob).format("YYYY-MM-DD"),
+      email: value.email,
+      isActive: value.isActive,
+      skillLevels: value.skillLevels,
+      createdAt: dayjs(value.createdAt).format("YYYY-MM-DD"),
+    };
+
     navigate(`view/${_id}`, {
-      state: { employee: value },
+      state: { employee: populateViewEmployeeFormInitialValues },
     });
   };
 
   const handleEditEmployeeNavigate = async (value: any) => {
     const { _id } = value;
+
+    console.log(value);
 
     const populateEditEmployeeFormInitialValues: any = {
       firstName: value.firstName,
@@ -95,8 +111,6 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       isActive: value.isActive,
       skillLevels: value.skillLevels,
     };
-
-    console.log(populateEditEmployeeFormInitialValues);
 
     navigate(`edit/${_id}`, {
       state: {
@@ -231,7 +245,12 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       key: "isActive",
       width: "10%",
       ...getColumnSearchProps("isActive"),
-      render: (isActive) => isActive.toString(),
+      render: (isActive) =>
+        isActive ? (
+          <CheckCircleTwoTone twoToneColor="#52c41a" />
+        ) : (
+          <CloseCircleTwoTone twoToneColor="red" />
+        ),
       sorter: (a, b) =>
         a.isActive.toString().localeCompare(b.isActive.toString()),
       sortDirections: ["descend", "ascend"],

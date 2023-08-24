@@ -11,6 +11,7 @@ import {
   Typography,
 } from "antd";
 import { RollbackOutlined, EditOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const { Title, Text } = Typography;
 
@@ -18,7 +19,7 @@ export const ViewEmployee: React.FC = () => {
   const { employeeId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const employeeData: IEmployee = state.employee;
+  const employeeData: any = state.employee;
 
   const handleReturnToPrevious = () => {
     navigate(-1);
@@ -71,10 +72,7 @@ export const ViewEmployee: React.FC = () => {
                 </Text>
                 <Divider />
                 <Text strong>
-                  <Text italic>
-                    Created:{" "}
-                    {new Date(employeeData.createdAt).toLocaleDateString()}
-                  </Text>
+                  <Text italic>Created: {employeeData.createdAt}</Text>
                 </Text>
               </Col>
             </Row>

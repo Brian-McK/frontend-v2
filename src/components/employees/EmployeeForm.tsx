@@ -11,6 +11,7 @@ import {
 } from "../../services/employeeservice";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import dayjs from "dayjs";
+import "dayjs/plugin/customParseFormat";
 
 type EmployeeFormProps = {
   initialEmployee?: any; // TODO - fix later - dob field not in IEmployee
@@ -24,8 +25,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const [form] = Form.useForm();
   const [active, setIsActive] = useState<boolean>(true);
 
-  console.log(initialEmployee);
-
   const onChangeIsActiveHandler = (e: CheckboxChangeEvent) => {
     setIsActive(e.target.checked);
   };
@@ -33,14 +32,16 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const onFinish = async (values: AddNewEmployeeRequestType) => {
     try {
       if (initialEmployee) {
-        const updatedEmployee: UpdateEmployeeRequestType = {
+        const updatedEmployee: any = {
           firstName: values.firstName,
           lastName: values.lastName,
-          dob: values.dob,
+          dob: dayjs(values.dob).format(dateFormat),
           email: values.email,
           isActive: active,
           skillLevels: [],
         };
+
+        console.log(updatedEmployee);
 
         // const updateEmployeeResponse = await updateEmployee(
         //   initialEmployee._id,
@@ -80,9 +81,35 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   };
 
   const dateFormat = "YYYY-MM-DD";
-  // const initialEmployeeExtend = initialEmployee;
-  // console.log(initialEmployeeExtend?.dob);
-  // initialEmployeeExtend.dob = dayjs(initialEmployee.dob);
+
+  function datepickerInitialValue() {
+    const inputFormat =
+      "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ (Greenwich Mean Time)";
+
+    if (initialEmployee) {
+      return dayjs(initialEmployee.dob, { format: inputFormat }).startOf("day");
+    }
+
+    return dayjs("1991-12-05");
+  }
+
+  useEffect(() => {
+    if (initialEmployee != undefined) {
+      const hey = datepickerInitialValue();
+
+      form.setFieldValue("dob", hey);
+    }
+  }, [initialEmployee, datepickerInitialValue, form]);
+
+  const initialValuesInitialiser = () => {
+    if (initialEmployee) {
+      return {
+        ...initialEmployee,
+        dob: dayjs(initialEmployee.dob).format(dateFormat),
+      };
+    }
+    return { remember: true };
+  };
 
   return (
     <Form
@@ -90,12 +117,12 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       layout="vertical"
       name={initialEmployee ? "edit_employee" : "add_employee"}
       className="employee-form"
-      initialValues={initialEmployee || { remember: true }}
       onFinish={onFinish}
     >
       <Form.Item
         label="First name"
         name="firstName"
+        initialValue={initialEmployee ? initialEmployee.firstName : ""}
         rules={[{ required: true, message: "Please input first name" }]}
       >
         <Input placeholder="First name" />
@@ -103,6 +130,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       <Form.Item
         label="Last name"
         name="lastName"
+        initialValue={initialEmployee ? initialEmployee.lastName : ""}
         rules={[{ required: true, message: "Please input last name" }]}
       >
         <Input placeholder="Last name" />
@@ -111,6 +139,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       <Form.Item
         label="Email"
         name="email"
+        initialValue={initialEmployee ? initialEmployee.email : ""}
         rules={[{ required: true, message: "Please input email" }]}
       >
         <Input placeholder="Email" />
@@ -121,7 +150,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           <Col>
             <Form.Item label="Status" name="isActive" valuePropName="checked">
               <Checkbox
-                defaultChecked={true}
+                defaultChecked={
+                  initialEmployee ? initialEmployee.isActive : true
+                }
                 onChange={onChangeIsActiveHandler}
               >
                 {active ? "Active" : "Not Active"}
