@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Button, Checkbox, Form, Input, DatePicker, Row, Col } from "antd";
-import { ISkillsArray } from "../../services/skillsservice";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  DatePicker,
+  Row,
+  Col,
+  Select,
+} from "antd";
+import { ISkill, ISkillsArray } from "../../services/skillsservice";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import {
   AddNewEmployeeRequestType,
@@ -12,6 +21,7 @@ import {
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import dayjs from "dayjs";
 import "dayjs/plugin/customParseFormat";
+import type { SelectProps } from "antd";
 
 type EmployeeFormProps = {
   initialEmployee?: any; // TODO - fix later - dob field not in IEmployee
@@ -21,9 +31,27 @@ type EmployeeFormProps = {
 export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   onMutationResolved,
   initialEmployee,
+  skillsToSelect,
 }: EmployeeFormProps) => {
   const [form] = Form.useForm();
   const [active, setIsActive] = useState<boolean>(true);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+
+  let options: SelectProps["options"] = [];
+
+  options = skillsToSelect?.map((skill: ISkill) => ({
+    label: skill.name,
+    value: skill._id,
+  }));
+
+  const dateFormat = "YYYY-MM-DD";
+
+  console.log(initialEmployee);
+
+  const handleSelectSkillChange = (value: string[]) => {
+    setSelectedSkills(value);
+    console.log(`selected ${value}`);
+  };
 
   const onChangeIsActiveHandler = (e: CheckboxChangeEvent) => {
     setIsActive(e.target.checked);
@@ -40,7 +68,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           dob: dayjs(values.dob).format(dateFormat),
           email: values.email,
           isActive: active,
-          skillLevels: [],
+          skillLevels: selectedSkills,
         };
 
         console.log(updatedEmployee);
@@ -62,13 +90,14 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           dob: dayjs(values.dob).format(dateFormat),
           email: values.email,
           isActive: active,
-          skillLevels: [],
+          skillLevels: selectedSkills,
         };
 
         const addEmployeeResponse = await addNewEmployee(newEmployee);
 
         if (addEmployeeResponse.status === 201) {
           form.resetFields();
+          setSelectedSkills([]);
           if (onMutationResolved) {
             onMutationResolved(true);
           }
@@ -81,8 +110,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       console.error(error); // TODO- ERROR STATE
     }
   };
-
-  const dateFormat = "YYYY-MM-DD";
 
   function datepickerInitialValue() {
     const inputFormat =
@@ -100,6 +127,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       const dobValue = datepickerInitialValue();
 
       form.setFieldValue("dob", dobValue);
+
+      setSelectedSkills(initialEmployee.skillLevels);
     }
   }, [initialEmployee, datepickerInitialValue, form]);
 
@@ -177,6 +206,25 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           </Col>
         </Row>
       </Input.Group>
+
+      <Form.Item
+        label="Select skills"
+        name="skills"
+        initialValue={
+          initialEmployee
+            ? initialEmployee.skillLevels?.map((skill: any) => skill)
+            : undefined
+        }
+      >
+        <Select
+          mode="multiple"
+          allowClear
+          style={{ width: "100%" }}
+          placeholder="Select skills"
+          onChange={handleSelectSkillChange}
+          options={options}
+        />
+      </Form.Item>
 
       <Form.Item>
         <Button
