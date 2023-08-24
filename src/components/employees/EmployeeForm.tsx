@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Button, Checkbox, Form, Input, DatePicker, Row, Col } from "antd";
 import { ISkillsArray } from "../../services/skillsservice";
-import { useAuth } from "../../context/AuthContext";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import {
   AddNewEmployeeRequestType,
   IEmployee,
   UpdateEmployeeRequestType,
   addNewEmployee,
+  updateEmployee,
 } from "../../services/employeeservice";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import dayjs from "dayjs";
@@ -29,10 +29,12 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     setIsActive(e.target.checked);
   };
 
-  const onFinish = async (values: AddNewEmployeeRequestType) => {
+  const onFinish = async (
+    values: AddNewEmployeeRequestType | UpdateEmployeeRequestType
+  ) => {
     try {
       if (initialEmployee) {
-        const updatedEmployee: any = {
+        const updatedEmployee: UpdateEmployeeRequestType = {
           firstName: values.firstName,
           lastName: values.lastName,
           dob: dayjs(values.dob).format(dateFormat),
@@ -43,16 +45,16 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
         console.log(updatedEmployee);
 
-        // const updateEmployeeResponse = await updateEmployee(
-        //   initialEmployee._id,
-        //   updatedEmployee
-        // );
+        const updateEmployeeResponse = await updateEmployee(
+          initialEmployee._id,
+          updatedEmployee
+        );
 
-        // if (updateEmployeeResponse.status === 200) {
-        //   if (onMutationResolved) {
-        //     onMutationResolved(true);
-        //   }
-        // }
+        if (updateEmployeeResponse.status === 200) {
+          if (onMutationResolved) {
+            onMutationResolved(true);
+          }
+        }
       } else {
         const newEmployee: AddNewEmployeeRequestType = {
           firstName: values.firstName,
@@ -95,9 +97,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   useEffect(() => {
     if (initialEmployee != undefined) {
-      const hey = datepickerInitialValue();
+      const dobValue = datepickerInitialValue();
 
-      form.setFieldValue("dob", hey);
+      form.setFieldValue("dob", dobValue);
     }
   }, [initialEmployee, datepickerInitialValue, form]);
 

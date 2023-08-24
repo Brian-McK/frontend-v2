@@ -94,7 +94,10 @@ function DashboardRoutes() {
           path="manage-employees/view/:employeeId"
           element={<ViewEmployee />}
         />
-        <Route path="manage-employees/edit/:employeeId" element={<EditEmployee />} />
+        <Route
+          path="manage-employees/edit/:employeeId"
+          element={<EditEmployee />}
+        />
         <Route
           path="manage-skills"
           element={

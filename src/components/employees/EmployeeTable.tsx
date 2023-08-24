@@ -84,6 +84,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     const { _id } = value;
 
     const populateViewEmployeeFormInitialValues: any = {
+      _id: value._id,
       firstName: value.firstName,
       lastName: value.lastName,
       dob: dayjs(value.dob).format("YYYY-MM-DD"),
@@ -104,6 +105,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     console.log(value);
 
     const populateEditEmployeeFormInitialValues: any = {
+      _id: value._id,
       firstName: value.firstName,
       lastName: value.lastName,
       dob: dayjs(value.dob).format("YYYY-MM-DD"),
