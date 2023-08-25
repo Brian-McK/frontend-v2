@@ -21,7 +21,7 @@ export const EditEmployee: React.FC = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const employeeData: any = state.employee;
-  const skillData: ISkillsArray = state.skills;
+  const skills: ISkillsArray = state.skills;
 
   const handleMutationResolvedStatus = (data: boolean) => {
     console.log("handleMutationResolvedStatus: ", data);
@@ -58,7 +58,7 @@ export const EditEmployee: React.FC = () => {
               <Col xs={24} sm={16}>
                 <EmployeeForm
                   onMutationResolved={handleMutationResolvedStatus}
-                  skillsToSelect={skillData}
+                  skillsToSelect={skills}
                   initialEmployee={employeeData}
                 />
               </Col>

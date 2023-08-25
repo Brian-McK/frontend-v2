@@ -157,7 +157,10 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       dob: dayjs(value.dob).format("YYYY-MM-DD"),
       email: value.email,
       isActive: value.isActive,
-      skillLevels: value.skillLevels,
+      skillLevels:
+        skills != null
+          ? assignSkillIdsToSkillObjects(skills, value.skillLevels)
+          : [],
     };
 
     navigate(`edit/${_id}`, {

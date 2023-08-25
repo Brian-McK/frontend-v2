@@ -22,7 +22,6 @@ export const ViewEmployee: React.FC = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const employeeData: any = state.employee;
-  const skillData: ISkillsArray = state.skills;
 
   const handleReturnToPrevious = () => {
     navigate(-1);
@@ -30,7 +29,7 @@ export const ViewEmployee: React.FC = () => {
 
   const handleNavigateToEdit = () => {
     navigate(`/dashboard/manage-employees/edit/${employeeId}`, {
-      state,
+      state: state,
     });
   };
 

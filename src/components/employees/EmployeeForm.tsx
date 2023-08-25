@@ -35,7 +35,15 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 }: EmployeeFormProps) => {
   const [form] = Form.useForm();
   const [active, setIsActive] = useState<boolean>(true);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedSkills, setSelectedSkills] = useState<string[] | null>([]);
+
+  useEffect(() => {
+    if (initialEmployee) {
+      setSelectedSkills(
+        initialEmployee.skillLevels.map((skillLevel: ISkill) => skillLevel._id)
+      );
+    }
+  }, [initialEmployee]);
 
   let options: SelectProps["options"] = [];
 
@@ -47,6 +55,7 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const dateFormat = "YYYY-MM-DD";
 
   const handleSelectSkillChange = (value: string[]) => {
+    console.log(value);
     setSelectedSkills(value);
   };
 
@@ -123,7 +132,9 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
       form.setFieldValue("dob", dobValue);
 
-      setSelectedSkills(initialEmployee.skillLevels);
+      // setSelectedSkills(
+      //   initialEmployee.skillLevels.map((skillLevel: ISkill) => skillLevel._id)
+      // );
     }
   }, [initialEmployee, datepickerInitialValue, form]);
 
@@ -136,6 +147,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
     return { remember: true };
   };
+
+  console.log(selectedSkills);
 
   return (
     <Form
@@ -205,17 +218,24 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       <Form.Item
         label="Select skills"
         name="skills"
-        initialValue={
-          initialEmployee
-            ? initialEmployee.skillLevels?.map((skill: any) => skill)
-            : undefined
-        }
+        // initialValue={
+        //   initialEmployee
+        //     ? initialEmployee.skillLevels?.map((skill: any) => skill.name)
+        //     : undefined
+        // }
       >
         <Select
           mode="multiple"
           allowClear
           style={{ width: "100%" }}
           placeholder="Select skills"
+          defaultValue={
+            initialEmployee
+              ? initialEmployee.skillLevels.map(
+                  (skillLevel: ISkill) => skillLevel._id
+                )
+              : []
+          }
           onChange={handleSelectSkillChange}
           options={options}
         />
