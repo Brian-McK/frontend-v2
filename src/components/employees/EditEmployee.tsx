@@ -1,5 +1,5 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { ISkill } from "../../services/skillsservice";
+import { IEmployee } from "../../services/employeeservice";
 import {
   Row,
   Col,
@@ -11,22 +11,25 @@ import {
   Typography,
 } from "antd";
 import { RollbackOutlined, EyeOutlined } from "@ant-design/icons";
-import { SkillForm } from "./SkillForm";
+import { EmployeeForm } from "../employees/EmployeeForm";
+import { ISkillsArray } from "../../services/skillsservice";
 
 const { Title, Text } = Typography;
 
-export const EditSkill: React.FC = () => {
-  const { skillId } = useParams();
+export const EditEmployee: React.FC = () => {
+  const { employeeId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-  const skillData: ISkill = state.skill;
+  const employeeData: any = state.employee;
+  const skills: ISkillsArray = state.skills;
 
   const handleMutationResolvedStatus = (data: boolean) => {
+    console.log("handleMutationResolvedStatus: ", data);
     // setRequestRefetchSkillsFromMutation(data);
   };
 
-  const handleReturnToSkills = () => {
-    navigate(`/dashboard/manage-skills/`, {
+  const handleReturnToEmployees = () => {
+    navigate(`/dashboard/manage-employees/`, {
       state,
     });
   };
@@ -35,7 +38,7 @@ export const EditSkill: React.FC = () => {
     <>
       <Row justify={"center"}>
         <Col sm={24} lg={16}>
-          <Card title={`${skillData.name}`}>
+          <Card title={`Edit employee: ${employeeData.firstName}`}>
             <Row gutter={16}>
               <Col
                 xs={24}
@@ -53,7 +56,11 @@ export const EditSkill: React.FC = () => {
                 />
               </Col>
               <Col xs={24} sm={16}>
-                <SkillForm initialSkill={skillData} />
+                <EmployeeForm
+                  onMutationResolved={handleMutationResolvedStatus}
+                  skillsToSelect={skills}
+                  initialEmployee={employeeData}
+                />
               </Col>
             </Row>
 
@@ -61,13 +68,13 @@ export const EditSkill: React.FC = () => {
 
             <Row justify={"end"}>
               <Col>
-                <Tooltip title="Return to list of skills">
+                <Tooltip title="Return to list of employees">
                   <Button
                     type="primary"
                     icon={<RollbackOutlined />}
-                    onClick={handleReturnToSkills}
+                    onClick={handleReturnToEmployees}
                   >
-                    Return to skills
+                    Return to employees
                   </Button>
                 </Tooltip>
               </Col>

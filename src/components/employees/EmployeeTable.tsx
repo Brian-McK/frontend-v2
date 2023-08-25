@@ -1,4 +1,8 @@
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  CheckCircleTwoTone,
+  CloseCircleTwoTone,
+} from "@ant-design/icons";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
@@ -11,12 +15,16 @@ import { useNavigate } from "react-router-dom";
 import {
   IEmployee,
   IEmployeeArray,
+  UpdateEmployeeRequestType,
   deleteEmployee,
 } from "../../services/employeeservice";
+import { ISkillsArray } from "../../services/skillsservice";
+import dayjs from "dayjs";
 
 type EmployeeTableProps = {
   employees: IEmployeeArray | null;
   isLoadingEmployees: boolean;
+  skills: ISkillsArray | null;
 } & IMutationResolved;
 
 type EmployeeDataIndex = IEmployee["_id"];
@@ -26,6 +34,7 @@ type EmployeeDataIndex = IEmployee["_id"];
 export const EmployeeTable: React.FC<EmployeeTableProps> = ({
   employees,
   isLoadingEmployees,
+  skills,
   onMutationResolved,
 }: EmployeeTableProps) => {
   const [searchText, setSearchText] = useState<any | null>(null);
@@ -71,19 +80,94 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     // TODO - Confirmation modal
   };
 
-  const handleViewEmployeeNavigate = async (value: IEmployee) => {
+  const mapSkillLevelIdsToSkillLevelObjects = (
+    skills: ISkillsArray | null,
+    value: any
+  ): any => {
+    if (skills == null || value.skillLevels == null) {
+      return [];
+    }
+
+    const skillLevelMap = new Map();
+
+    for (const skillLevel of skills) {
+      skillLevelMap.set(skillLevel._id, skillLevel);
+    }
+
+    const employeesSkillLevelIds = value.skillLevels;
+
+    const skillLevelObjects = employeesSkillLevelIds.map(
+      (skillLevelId: string) => skillLevelMap.get(skillLevelId)
+    );
+
+    return skillLevelObjects;
+  };
+
+  const assignSkillIdsToSkillObjects = (
+    skills: ISkillsArray,
+    employeesSelectedSkillLevelIds: string[]
+  ): ISkillsArray | [] => {
+    let assignedSkillLevels: ISkillsArray = [];
+
+    employeesSelectedSkillLevelIds.map((employeesSelectedSkillLevelId) => {
+      const skillLevel = skills.find(
+        (sl) => sl._id === employeesSelectedSkillLevelId
+      );
+
+      if (skillLevel) {
+        assignedSkillLevels.push(skillLevel);
+      }
+    });
+
+    return assignedSkillLevels;
+  };
+
+  const handleViewEmployeeNavigate = async (value: any) => {
     const { _id } = value;
 
+    const populateViewEmployeeFormInitialValues: any = {
+      _id: value._id,
+      firstName: value.firstName,
+      lastName: value.lastName,
+      dob: dayjs(value.dob).format("YYYY-MM-DD"),
+      email: value.email,
+      isActive: value.isActive,
+      skillLevels:
+        skills != null
+          ? assignSkillIdsToSkillObjects(skills, value.skillLevels)
+          : [],
+      createdAt: dayjs(value.createdAt).format("YYYY-MM-DD"),
+    };
+
     navigate(`view/${_id}`, {
-      state: { employee: value },
+      state: {
+        employee: populateViewEmployeeFormInitialValues,
+        skills: skills,
+      },
     });
   };
 
-  const handleEditEmployeeNavigate = async (value: IEmployee) => {
+  const handleEditEmployeeNavigate = async (value: any) => {
     const { _id } = value;
 
+    const populateEditEmployeeFormInitialValues: any = {
+      _id: value._id,
+      firstName: value.firstName,
+      lastName: value.lastName,
+      dob: dayjs(value.dob).format("YYYY-MM-DD"),
+      email: value.email,
+      isActive: value.isActive,
+      skillLevels:
+        skills != null
+          ? assignSkillIdsToSkillObjects(skills, value.skillLevels)
+          : [],
+    };
+
     navigate(`edit/${_id}`, {
-      state: { employee: value },
+      state: {
+        employee: populateEditEmployeeFormInitialValues,
+        skills: skills,
+      },
     });
   };
 
@@ -212,7 +296,14 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       key: "isActive",
       width: "10%",
       ...getColumnSearchProps("isActive"),
-      sorter: (a, b) => (a.isActive === b.isActive ? 0 : a.isActive ? 1 : -1),
+      render: (isActive) =>
+        isActive ? (
+          <CheckCircleTwoTone twoToneColor="#52c41a" />
+        ) : (
+          <CloseCircleTwoTone twoToneColor="red" />
+        ),
+      sorter: (a, b) =>
+        a.isActive.toString().localeCompare(b.isActive.toString()),
       sortDirections: ["descend", "ascend"],
     },
     {

@@ -32,8 +32,8 @@ export const ViewSkill: React.FC = () => {
 
   return (
     <>
-      <Row>
-        <Col span={24}>
+      <Row justify={"center"}>
+        <Col sm={24} lg={16}>
           <Card
             title={`${skillData.name}`}
             extra={

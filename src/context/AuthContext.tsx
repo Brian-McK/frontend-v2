@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren<{}>> = ({
     setToken(token);
     localStorage.setItem("username", user);
     localStorage.setItem("token", token);
-    navigate("/dashboard");
+    navigate("/dashboard/manage-employees");
   };
 
   const setLoggedOut = () => {

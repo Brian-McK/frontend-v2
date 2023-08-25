@@ -17,7 +17,7 @@ export interface IEmployeeArray extends Array<IEmployee> {}
 export type AddNewEmployeeRequestType = {
   firstName: string;
   lastName: string;
-  dob: Date;
+  dob: string;
   email: string;
   isActive: boolean;
   skillLevels: string[] | null;
