@@ -33,8 +33,8 @@ export const EditSkill: React.FC = () => {
 
   return (
     <>
-      <Row>
-        <Col span={24}>
+      <Row justify={"center"}>
+        <Col sm={24} lg={16}>
           <Card title={`${skillData.name}`}>
             <Row gutter={16}>
               <Col
@@ -53,9 +53,7 @@ export const EditSkill: React.FC = () => {
                 />
               </Col>
               <Col xs={24} sm={16}>
-                <SkillForm
-                  initialSkill={skillData}
-                />
+                <SkillForm initialSkill={skillData} />
               </Col>
             </Row>
 

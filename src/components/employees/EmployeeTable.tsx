@@ -80,6 +80,48 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     // TODO - Confirmation modal
   };
 
+  const mapSkillLevelIdsToSkillLevelObjects = (
+    skills: ISkillsArray | null,
+    value: any
+  ): any => {
+    if (skills == null || value.skillLevels == null) {
+      return [];
+    }
+
+    const skillLevelMap = new Map();
+
+    for (const skillLevel of skills) {
+      skillLevelMap.set(skillLevel._id, skillLevel);
+    }
+
+    const employeesSkillLevelIds = value.skillLevels;
+
+    const skillLevelObjects = employeesSkillLevelIds.map(
+      (skillLevelId: string) => skillLevelMap.get(skillLevelId)
+    );
+
+    return skillLevelObjects;
+  };
+
+  const assignSkillIdsToSkillObjects = (
+    skills: ISkillsArray,
+    employeesSelectedSkillLevelIds: string[]
+  ): ISkillsArray | [] => {
+    let assignedSkillLevels: ISkillsArray = [];
+
+    employeesSelectedSkillLevelIds.map((employeesSelectedSkillLevelId) => {
+      const skillLevel = skills.find(
+        (sl) => sl._id === employeesSelectedSkillLevelId
+      );
+
+      if (skillLevel) {
+        assignedSkillLevels.push(skillLevel);
+      }
+    });
+
+    return assignedSkillLevels;
+  };
+
   const handleViewEmployeeNavigate = async (value: any) => {
     const { _id } = value;
 
@@ -90,19 +132,23 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       dob: dayjs(value.dob).format("YYYY-MM-DD"),
       email: value.email,
       isActive: value.isActive,
-      skillLevels: value.skillLevels,
+      skillLevels:
+        skills != null
+          ? assignSkillIdsToSkillObjects(skills, value.skillLevels)
+          : [],
       createdAt: dayjs(value.createdAt).format("YYYY-MM-DD"),
     };
 
     navigate(`view/${_id}`, {
-      state: { employee: populateViewEmployeeFormInitialValues },
+      state: {
+        employee: populateViewEmployeeFormInitialValues,
+        skills: skills,
+      },
     });
   };
 
   const handleEditEmployeeNavigate = async (value: any) => {
     const { _id } = value;
-
-    console.log(value);
 
     const populateEditEmployeeFormInitialValues: any = {
       _id: value._id,

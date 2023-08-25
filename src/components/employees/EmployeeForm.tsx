@@ -46,11 +46,8 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   const dateFormat = "YYYY-MM-DD";
 
-  console.log(initialEmployee);
-
   const handleSelectSkillChange = (value: string[]) => {
     setSelectedSkills(value);
-    console.log(`selected ${value}`);
   };
 
   const onChangeIsActiveHandler = (e: CheckboxChangeEvent) => {
@@ -70,8 +67,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
           isActive: active,
           skillLevels: selectedSkills,
         };
-
-        console.log(updatedEmployee);
 
         const updateEmployeeResponse = await updateEmployee(
           initialEmployee._id,

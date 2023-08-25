@@ -36,8 +36,8 @@ export const EditEmployee: React.FC = () => {
 
   return (
     <>
-      <Row>
-        <Col span={24}>
+      <Row justify={"center"}>
+        <Col sm={24} lg={16}>
           <Card title={`Edit employee: ${employeeData.firstName}`}>
             <Row gutter={16}>
               <Col
