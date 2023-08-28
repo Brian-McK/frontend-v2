@@ -10,7 +10,6 @@ import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { deleteSkill } from "../../services/skillsservice";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../services/api";
 
 type SkillTableProps = {
   skills: ISkillsArray | null;
@@ -18,8 +17,6 @@ type SkillTableProps = {
 } & IMutationResolved;
 
 type SkillDataIndex = ISkill["_id"];
-
-// TODO - ADD HORIZONTAL SCROLL TO TABLE, MAKE IT BETTER RESPONSIVE
 
 export const SkillsTable: React.FC<SkillTableProps> = ({
   skills,
@@ -253,6 +250,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     <Table
       loading={isLoadingSkills}
       columns={columns}
+      scroll={{ x: "max-content" }}
       dataSource={skills.map((skill) => ({ ...skill, key: skill._id }))}
     />
   );

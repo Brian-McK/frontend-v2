@@ -12,6 +12,16 @@ import { ISkillsArray, getAllSkills } from "./services/skillsservice";
 import { ViewEmployee } from "./components/employees/ViewEmployee";
 import { EditEmployee } from "./components/employees/EditEmployee";
 
+type GetSkillsResponseType = {
+  data: ISkillsArray;
+  status: number;
+};
+
+type GetEmployeesResponseType = {
+  data: IEmployeeArray;
+  status: number;
+};
+
 const App: React.FC = () => (
   <>
     <div>
@@ -29,10 +39,26 @@ function DashboardRoutes() {
   const [skills, setSkills] = useState<ISkillsArray | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null); // TODO - ERROR STATE
+  const [
+    requestRefetchSkillsFromMutation,
+    setRequestRefetchSkillsFromMutation,
+  ] = useState<boolean>(false);
+
+  const [
+    requestRefetchEmployeesFromMutation,
+    setRequestRefetchEmployeesFromMutation,
+  ] = useState<boolean>(false);
+
+  const handleMutationResolvedSkillsStatus = (data: boolean) => {
+    setRequestRefetchSkillsFromMutation(data);
+  };
+
+  const handleMutationResolvedEmployeesStatus = (data: boolean) => {
+    setRequestRefetchEmployeesFromMutation(data);
+  };
 
   const storedToken = localStorage.getItem("token");
 
-  // #region fetch employees and skills
   const fetchEmployeesAndSkills = async () => {
     try {
       setLoading(true);
@@ -59,7 +85,44 @@ function DashboardRoutes() {
     fetchEmployeesAndSkills();
   }, []);
 
-  // #endregion
+  const fetchSkills = async () => {
+    try {
+      const skillsResponse: GetSkillsResponseType = await getAllSkills();
+      setSkills(skillsResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (requestRefetchSkillsFromMutation) {
+      fetchSkills();
+      setRequestRefetchSkillsFromMutation(false);
+    }
+  }, [requestRefetchSkillsFromMutation]);
+
+  const fetchEmployees = async () => {
+    try {
+      const employeesResponse: GetEmployeesResponseType =
+        await getAllEmployees();
+      setEmployees(employeesResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (requestRefetchEmployeesFromMutation) {
+      fetchEmployees();
+      setRequestRefetchEmployeesFromMutation(false);
+    }
+  }, [requestRefetchEmployeesFromMutation]);
 
   if (!storedToken) {
     // TODO - This is compromised, come back to later stage
@@ -74,6 +137,7 @@ function DashboardRoutes() {
           index
           element={
             <ManageEmployees
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
               initialEmployees={employees}
               initialSkills={skills}
               initialLoading={loading}
@@ -84,6 +148,7 @@ function DashboardRoutes() {
           path="manage-employees"
           element={
             <ManageEmployees
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
               initialEmployees={employees}
               initialSkills={skills}
               initialLoading={loading}
@@ -96,16 +161,31 @@ function DashboardRoutes() {
         />
         <Route
           path="manage-employees/edit/:employeeId"
-          element={<EditEmployee />}
+          element={
+            <EditEmployee
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
+            />
+          }
         />
         <Route
           path="manage-skills"
           element={
-            <ManageSkills initialSkills={skills} initialLoading={loading} />
+            <ManageSkills
+              onMutationResolved={handleMutationResolvedSkillsStatus}
+              initialSkills={skills}
+              initialLoading={loading}
+            />
           }
         />
         <Route path="manage-skills/view/:skillId" element={<ViewSkill />} />
-        <Route path="manage-skills/edit/:skillId" element={<EditSkill />} />
+        <Route
+          path="manage-skills/edit/:skillId"
+          element={
+            <EditSkill
+              onMutationResolved={handleMutationResolvedSkillsStatus}
+            />
+          }
+        />
       </Route>
     </Routes>
   );

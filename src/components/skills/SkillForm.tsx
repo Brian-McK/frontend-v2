@@ -5,17 +5,8 @@ import {
   updateSkill, // Import the updateSkill function
   AddNewSkillRequestType,
 } from "../../services/skillsservice";
-import { useAuth } from "../../context/AuthContext";
 import { IMutationResolved } from "../../Interfaces/MutationInterface";
 import { ISkill } from "../../services/skillsservice";
-
-type ErrorWithResponseDataMessage = {
-  response: {
-    data: {
-      message: string;
-    };
-  };
-};
 
 const { TextArea } = Input;
 
@@ -28,8 +19,6 @@ export const SkillForm: React.FC<SkillFormProps> = ({
   initialSkill,
 }: SkillFormProps) => {
   const [form] = Form.useForm();
-
-  const auth = useAuth();
 
   const onFinish = async (values: AddNewSkillRequestType) => {
     try {

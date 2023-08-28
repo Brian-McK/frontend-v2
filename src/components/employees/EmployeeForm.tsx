@@ -55,7 +55,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const dateFormat = "YYYY-MM-DD";
 
   const handleSelectSkillChange = (value: string[]) => {
-    console.log(value);
     setSelectedSkills(value);
   };
 
@@ -131,10 +130,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       const dobValue = datepickerInitialValue();
 
       form.setFieldValue("dob", dobValue);
-
-      // setSelectedSkills(
-      //   initialEmployee.skillLevels.map((skillLevel: ISkill) => skillLevel._id)
-      // );
     }
   }, [initialEmployee, datepickerInitialValue, form]);
 
@@ -147,8 +142,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
     return { remember: true };
   };
-
-  console.log(selectedSkills);
 
   return (
     <Form

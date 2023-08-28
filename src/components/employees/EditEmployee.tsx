@@ -13,20 +13,20 @@ import {
 import { RollbackOutlined, EyeOutlined } from "@ant-design/icons";
 import { EmployeeForm } from "../employees/EmployeeForm";
 import { ISkillsArray } from "../../services/skillsservice";
+import { IMutationResolved } from "../../Interfaces/MutationInterface";
 
 const { Title, Text } = Typography;
 
-export const EditEmployee: React.FC = () => {
+type EditEmployeeProps = {} & IMutationResolved;
+
+export const EditEmployee: React.FC<EditEmployeeProps> = ({
+  onMutationResolved,
+}: EditEmployeeProps) => {
   const { employeeId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
   const employeeData: any = state.employee;
   const skills: ISkillsArray = state.skills;
-
-  const handleMutationResolvedStatus = (data: boolean) => {
-    console.log("handleMutationResolvedStatus: ", data);
-    // setRequestRefetchSkillsFromMutation(data);
-  };
 
   const handleReturnToEmployees = () => {
     navigate(`/dashboard/manage-employees/`, {
@@ -57,7 +57,7 @@ export const EditEmployee: React.FC = () => {
               </Col>
               <Col xs={24} sm={16}>
                 <EmployeeForm
-                  onMutationResolved={handleMutationResolvedStatus}
+                  onMutationResolved={onMutationResolved}
                   skillsToSelect={skills}
                   initialEmployee={employeeData}
                 />
