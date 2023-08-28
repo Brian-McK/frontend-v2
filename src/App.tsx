@@ -130,30 +130,26 @@ function DashboardRoutes() {
     return <Navigate to="/" />;
   }
 
+  const EmployeeProps = {
+    onMutationResolved: handleMutationResolvedEmployeesStatus,
+    initialEmployees: employees,
+    initialSkills: skills,
+    initialLoading: loading,
+  };
+
+  const SkillProps = {
+    onMutationResolved: handleMutationResolvedSkillsStatus,
+    initialSkills: skills,
+    initialLoading: loading,
+  };
+
   return (
     <Routes>
       <Route element={<Dashboard />}>
-        <Route
-          index
-          element={
-            <ManageEmployees
-              onMutationResolved={handleMutationResolvedEmployeesStatus}
-              initialEmployees={employees}
-              initialSkills={skills}
-              initialLoading={loading}
-            />
-          }
-        />
+        <Route index element={<ManageEmployees {...EmployeeProps} />} />
         <Route
           path="manage-employees"
-          element={
-            <ManageEmployees
-              onMutationResolved={handleMutationResolvedEmployeesStatus}
-              initialEmployees={employees}
-              initialSkills={skills}
-              initialLoading={loading}
-            />
-          }
+          element={<ManageEmployees {...EmployeeProps} />}
         />
         <Route
           path="manage-employees/view/:employeeId"
@@ -169,13 +165,7 @@ function DashboardRoutes() {
         />
         <Route
           path="manage-skills"
-          element={
-            <ManageSkills
-              onMutationResolved={handleMutationResolvedSkillsStatus}
-              initialSkills={skills}
-              initialLoading={loading}
-            />
-          }
+          element={<ManageSkills {...SkillProps} />}
         />
         <Route path="manage-skills/view/:skillId" element={<ViewSkill />} />
         <Route
