@@ -1,5 +1,4 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { IEmployee } from "../../services/employeeservice";
 import {
   Row,
   Col,
@@ -13,7 +12,7 @@ import {
 } from "antd";
 import { RollbackOutlined, EditOutlined } from "@ant-design/icons";
 import { CheckCircleTwoTone, CloseCircleTwoTone } from "@ant-design/icons";
-import { ISkill, ISkillsArray } from "../../services/skillsservice";
+import { ISkill } from "../../services/skillsservice";
 
 const { Title, Text } = Typography;
 
@@ -100,9 +99,14 @@ export const ViewEmployee: React.FC = () => {
                       employeeData.skillLevels.length > 0 ? (
                         employeeData.skillLevels.map(
                           (skillLevel: ISkill, index: number) => (
-                            <Tag key={index} color="cyan">
-                              {skillLevel.name}
-                            </Tag>
+                            <Tooltip
+                              placement="top"
+                              title={skillLevel.description}
+                            >
+                              <Tag key={index} color="cyan">
+                                {skillLevel.name}
+                              </Tag>
+                            </Tooltip>
                           )
                         )
                       ) : (
