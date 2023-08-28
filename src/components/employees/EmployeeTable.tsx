@@ -6,7 +6,7 @@ import {
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table, Tooltip } from "antd";
+import { Button, Input, Space, Table, Tooltip, Popconfirm } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import { EyeOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -330,13 +330,19 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
             />
           </Tooltip>
           <Tooltip title="Delete employee">
-            <Button
-              type="primary"
-              shape="circle"
-              size={"small"}
-              icon={<DeleteOutlined />}
-              onClick={() => handleDeleteEmployee(record)}
-            />
+            <Popconfirm
+              title={`Are you sure you want to delete ${record.firstName}?`}
+              onConfirm={() => handleDeleteEmployee(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                shape="circle"
+                size={"small"}
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),

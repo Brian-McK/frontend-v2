@@ -2,7 +2,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import React, { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
 import type { InputRef } from "antd";
-import { Button, Input, Space, Table, Tooltip } from "antd";
+import { Button, Input, Space, Table, Tooltip, Popconfirm } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 import { ISkill, ISkillsArray } from "../../services/skillsservice";
@@ -229,13 +229,19 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
             />
           </Tooltip>
           <Tooltip title="Delete skill">
-            <Button
-              type="primary"
-              shape="circle"
-              size={"small"}
-              icon={<DeleteOutlined />}
-              onClick={() => handleDeleteSkill(record)}
-            />
+            <Popconfirm
+              title={`Are you sure you want to delete ${record.name}?`}
+              onConfirm={() => handleDeleteSkill(record)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="primary"
+                shape="circle"
+                size={"small"}
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
           </Tooltip>
         </Space>
       ),
