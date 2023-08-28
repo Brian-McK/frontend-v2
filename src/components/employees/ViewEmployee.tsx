@@ -100,6 +100,7 @@ export const ViewEmployee: React.FC = () => {
                         employeeData.skillLevels.map(
                           (skillLevel: ISkill, index: number) => (
                             <Tooltip
+                              key={skillLevel.name}
                               placement="top"
                               title={skillLevel.description}
                             >
