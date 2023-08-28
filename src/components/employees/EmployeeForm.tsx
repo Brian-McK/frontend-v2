@@ -55,7 +55,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
   const dateFormat = "YYYY-MM-DD";
 
   const handleSelectSkillChange = (value: string[]) => {
-    console.log(value);
     setSelectedSkills(value);
   };
 
@@ -147,8 +146,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
     }
     return { remember: true };
   };
-
-  console.log(selectedSkills);
 
   return (
     <Form

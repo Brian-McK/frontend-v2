@@ -29,8 +29,6 @@ export const SkillForm: React.FC<SkillFormProps> = ({
 }: SkillFormProps) => {
   const [form] = Form.useForm();
 
-  const auth = useAuth();
-
   const onFinish = async (values: AddNewSkillRequestType) => {
     try {
       if (initialSkill) {
