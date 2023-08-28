@@ -253,6 +253,7 @@ export const SkillsTable: React.FC<SkillTableProps> = ({
     <Table
       loading={isLoadingSkills}
       columns={columns}
+      scroll={{ x: "max-content" }}
       dataSource={skills.map((skill) => ({ ...skill, key: skill._id }))}
     />
   );

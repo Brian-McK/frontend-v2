@@ -267,7 +267,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "First Name",
       dataIndex: "firstName",
       key: "firstName",
-      width: "10%",
+      width: 100,
       ...getColumnSearchProps("firstName"),
       sorter: (a, b) => a.firstName.localeCompare(b.firstName),
       sortDirections: ["descend", "ascend"],
@@ -276,7 +276,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "Last Name",
       dataIndex: "lastName",
       key: "lastName",
-      width: "10%",
+      width: 100,
       ...getColumnSearchProps("lastName"),
       sorter: (a, b) => a.lastName.localeCompare(b.lastName),
       sortDirections: ["descend", "ascend"],
@@ -285,7 +285,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "Email",
       dataIndex: "email",
       key: "email",
-      width: "10%",
+      width: 150,
       ...getColumnSearchProps("email"),
       sorter: (a, b) => a.email.localeCompare(b.email),
       sortDirections: ["descend", "ascend"],
@@ -294,7 +294,8 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "Active",
       dataIndex: "isActive",
       key: "isActive",
-      width: "10%",
+      align: "center",
+      width: 60,
       ...getColumnSearchProps("isActive"),
       render: (isActive) =>
         isActive ? (
@@ -310,7 +311,8 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "Age",
       dataIndex: "age",
       key: "age",
-      width: "10%",
+      align: "center",
+      width: 60,
       ...getColumnSearchProps("age"),
       sorter: (a, b) => a.age - b.age,
       sortDirections: ["descend", "ascend"],
@@ -319,7 +321,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
       title: "Created",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: "10%",
+      width: 100,
       sorter: (a, b) => {
         const dateA = new Date(a.createdAt);
         const dateB = new Date(b.createdAt);
@@ -331,6 +333,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     {
       title: "Actions",
       key: "actions",
+      width: 10,
       render: (_, record) => (
         <Space size="middle">
           <Tooltip title="View employee">
@@ -373,6 +376,7 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     <Table
       loading={isLoadingEmployees}
       columns={columns}
+      scroll={{ x: "max-content" }}
       dataSource={employees.map((employee) => ({
         ...employee,
         key: employee._id,
