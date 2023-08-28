@@ -130,10 +130,6 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({
       const dobValue = datepickerInitialValue();
 
       form.setFieldValue("dob", dobValue);
-
-      // setSelectedSkills(
-      //   initialEmployee.skillLevels.map((skillLevel: ISkill) => skillLevel._id)
-      // );
     }
   }, [initialEmployee, datepickerInitialValue, form]);
 

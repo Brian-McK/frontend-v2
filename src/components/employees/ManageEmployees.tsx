@@ -4,47 +4,21 @@ import { EmployeeForm } from "./EmployeeForm";
 import { EmployeeTable } from "./EmployeeTable";
 import { IEmployeeArray } from "../../services/employeeservice";
 import { ISkillsArray } from "../../services/skillsservice";
+import { IMutationResolved } from "../../Interfaces/MutationInterface";
 
 type ManageEmployeesProps = {
   initialEmployees: IEmployeeArray | null;
   initialSkills: ISkillsArray | null;
   initialLoading: boolean;
-};
+} & IMutationResolved;
 
 export const ManageEmployees: React.FC<ManageEmployeesProps> = ({
   initialEmployees,
   initialSkills,
   initialLoading,
+  onMutationResolved,
 }: ManageEmployeesProps) => {
   const [error, setError] = useState<string | null>(null); // TODO - ERROR STATE
-  const [
-    requestRefetchEmployeesFromMutation,
-    setRequestRefetchEmployesFromMutation,
-  ] = useState<boolean>(false);
-
-  const handleMutationResolvedStatus = (data: boolean) => {
-    setRequestRefetchEmployesFromMutation(data);
-  };
-
-  // const fetchEmployees = async () => {
-  //   try {
-  //     const employeesResponse: GetEmployeesResponseType =
-  //       await getAllEmployees();
-  //     setEmployees(employeesResponse.data);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     setLoading(false);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (requestRefetchEmployeesFromMutation) {
-  //     fetchEmployees();
-  //     setRequestRefetchEmployesFromMutation(false);
-  //   }
-  // }, [requestRefetchEmployeesFromMutation]);
 
   return (
     <>
@@ -53,14 +27,14 @@ export const ManageEmployees: React.FC<ManageEmployeesProps> = ({
           <Card title={"Add an employee"} loading={initialLoading}>
             <EmployeeForm
               skillsToSelect={initialSkills}
-              onMutationResolved={handleMutationResolvedStatus}
+              onMutationResolved={onMutationResolved}
             />
           </Card>
         </Col>
         <Col sm={24} lg={16}>
           <Card title={"Employees"} loading={initialLoading}>
             <EmployeeTable
-              onMutationResolved={handleMutationResolvedStatus}
+              onMutationResolved={onMutationResolved}
               isLoadingEmployees={initialLoading}
               skills={initialSkills}
               employees={initialEmployees}

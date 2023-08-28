@@ -17,6 +17,11 @@ type GetSkillsResponseType = {
   status: number;
 };
 
+type GetEmployeesResponseType = {
+  data: IEmployeeArray;
+  status: number;
+};
+
 const App: React.FC = () => (
   <>
     <div>
@@ -39,8 +44,17 @@ function DashboardRoutes() {
     setRequestRefetchSkillsFromMutation,
   ] = useState<boolean>(false);
 
-  const handleMutationResolvedStatus = (data: boolean) => {
+  const [
+    requestRefetchEmployeesFromMutation,
+    setRequestRefetchEmployeesFromMutation,
+  ] = useState<boolean>(false);
+
+  const handleMutationResolvedSkillsStatus = (data: boolean) => {
     setRequestRefetchSkillsFromMutation(data);
+  };
+
+  const handleMutationResolvedEmployeesStatus = (data: boolean) => {
+    setRequestRefetchEmployeesFromMutation(data);
   };
 
   const storedToken = localStorage.getItem("token");
@@ -68,7 +82,6 @@ function DashboardRoutes() {
   };
 
   useEffect(() => {
-    console.log("fetchEmployeesAndSkills called");
     fetchEmployeesAndSkills();
   }, []);
 
@@ -91,6 +104,26 @@ function DashboardRoutes() {
     }
   }, [requestRefetchSkillsFromMutation]);
 
+  const fetchEmployees = async () => {
+    try {
+      const employeesResponse: GetEmployeesResponseType =
+        await getAllEmployees();
+      setEmployees(employeesResponse.data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (requestRefetchEmployeesFromMutation) {
+      fetchEmployees();
+      setRequestRefetchEmployeesFromMutation(false);
+    }
+  }, [requestRefetchEmployeesFromMutation]);
+
   if (!storedToken) {
     // TODO - This is compromised, come back to later stage
     // If not authenticated, redirect to login
@@ -104,6 +137,7 @@ function DashboardRoutes() {
           index
           element={
             <ManageEmployees
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
               initialEmployees={employees}
               initialSkills={skills}
               initialLoading={loading}
@@ -114,6 +148,7 @@ function DashboardRoutes() {
           path="manage-employees"
           element={
             <ManageEmployees
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
               initialEmployees={employees}
               initialSkills={skills}
               initialLoading={loading}
@@ -126,20 +161,31 @@ function DashboardRoutes() {
         />
         <Route
           path="manage-employees/edit/:employeeId"
-          element={<EditEmployee />}
+          element={
+            <EditEmployee
+              onMutationResolved={handleMutationResolvedEmployeesStatus}
+            />
+          }
         />
         <Route
           path="manage-skills"
           element={
             <ManageSkills
-              onMutationResolved={handleMutationResolvedStatus}
+              onMutationResolved={handleMutationResolvedSkillsStatus}
               initialSkills={skills}
               initialLoading={loading}
             />
           }
         />
         <Route path="manage-skills/view/:skillId" element={<ViewSkill />} />
-        <Route path="manage-skills/edit/:skillId" element={<EditSkill />} />
+        <Route
+          path="manage-skills/edit/:skillId"
+          element={
+            <EditSkill
+              onMutationResolved={handleMutationResolvedSkillsStatus}
+            />
+          }
+        />
       </Route>
     </Routes>
   );

@@ -10,20 +10,21 @@ import {
   Divider,
   Typography,
 } from "antd";
-import { RollbackOutlined, EyeOutlined } from "@ant-design/icons";
+import { RollbackOutlined } from "@ant-design/icons";
 import { SkillForm } from "./SkillForm";
+import { IMutationResolved } from "../../Interfaces/MutationInterface";
 
 const { Title, Text } = Typography;
 
-export const EditSkill: React.FC = () => {
+type EditSkillsProps = {} & IMutationResolved;
+
+export const EditSkill: React.FC<EditSkillsProps> = ({
+  onMutationResolved,
+}: EditSkillsProps) => {
   const { skillId } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
   const skillData: ISkill = state.skill;
-
-  const handleMutationResolvedStatus = (data: boolean) => {
-    // setRequestRefetchSkillsFromMutation(data);
-  };
 
   const handleReturnToSkills = () => {
     navigate(`/dashboard/manage-skills/`, {
@@ -53,7 +54,10 @@ export const EditSkill: React.FC = () => {
                 />
               </Col>
               <Col xs={24} sm={16}>
-                <SkillForm initialSkill={skillData} />
+                <SkillForm
+                  onMutationResolved={onMutationResolved}
+                  initialSkill={skillData}
+                />
               </Col>
             </Row>
 

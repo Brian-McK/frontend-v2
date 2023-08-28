@@ -29,8 +29,6 @@ type EmployeeTableProps = {
 
 type EmployeeDataIndex = IEmployee["_id"];
 
-// TODO - ADD HORIZONTAL SCROLL TO TABLE, MAKE IT BETTER RESPONSIVE
-
 export const EmployeeTable: React.FC<EmployeeTableProps> = ({
   employees,
   isLoadingEmployees,
@@ -78,29 +76,6 @@ export const EmployeeTable: React.FC<EmployeeTableProps> = ({
     }
 
     // TODO - Confirmation modal
-  };
-
-  const mapSkillLevelIdsToSkillLevelObjects = (
-    skills: ISkillsArray | null,
-    value: any
-  ): any => {
-    if (skills == null || value.skillLevels == null) {
-      return [];
-    }
-
-    const skillLevelMap = new Map();
-
-    for (const skillLevel of skills) {
-      skillLevelMap.set(skillLevel._id, skillLevel);
-    }
-
-    const employeesSkillLevelIds = value.skillLevels;
-
-    const skillLevelObjects = employeesSkillLevelIds.map(
-      (skillLevelId: string) => skillLevelMap.get(skillLevelId)
-    );
-
-    return skillLevelObjects;
   };
 
   const assignSkillIdsToSkillObjects = (
